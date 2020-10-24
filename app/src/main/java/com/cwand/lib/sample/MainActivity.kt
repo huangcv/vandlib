@@ -1,11 +1,20 @@
 package com.cwand.lib.sample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.cwand.lib.ktx.BaseTitleActivity
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+class MainActivity : BaseTitleActivity() {
+    override fun bindLayout(): Int {
+        return R.layout.activity_main
     }
+
+    override fun initViews(savedInstanceState: Bundle?) {
+    }
+
+    override fun initListeners() {
+    }
+
+    override fun initData() {
+    }
+
 }

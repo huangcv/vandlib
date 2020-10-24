@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryVand">#6200EE</color>
+    <color name="colorPrimaryDarkVand">#FF292D38</color>
+    <color name="colorAccentVand">#03DAC5</color>
+    <color name="colorNavigationBarVand">@color/colorPrimaryDarkVand</color>
+    <color name="colorWindowBackgroundVand">@color/colorPrimaryDarkVand</color>
+    <color name="colorTranslucentBackgroundVand">#97000000</color>
+</resources>

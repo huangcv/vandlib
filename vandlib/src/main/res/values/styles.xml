@@ -1,0 +1,59 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="VandBaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/colorWindowBackgroundVand</item>
+        <item name="colorPrimary">@color/colorPrimaryVand</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
+        <item name="colorAccent">@color/colorAccentVand</item>
+    </style>
+
+    <style name="VandBaseAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="VandBaseAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--主页Activity主题-->
+    <style name="VandMainActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/colorWindowBackgroundVand</item>
+        <item name="colorPrimary">@color/colorPrimaryVand</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
+        <item name="colorAccent">@color/colorAccentVand</item>
+    </style>
+    <!--启动页的主题-->
+    <style name="VandLauncherActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="colorPrimary">@color/colorPrimaryVand</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
+        <item name="colorAccent">@color/colorAccentVand</item>
+    </style>
+
+    <style name="VandTranslucentWindow">
+        <item name="android:windowBackground">@color/colorTranslucentBackgroundVand</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
+
+    <style name="VandTransparentDialog" parent="android:Theme.Dialog">
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.0</item>
+    </style>
+
+    <style name="VandBaseAppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>
