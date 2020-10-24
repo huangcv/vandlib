@@ -1,0 +1,3 @@
+include ':vandlib'
+include ':app'
+rootProject.name = "vand"
