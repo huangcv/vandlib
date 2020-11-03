@@ -6,10 +6,13 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
@@ -25,6 +28,8 @@ abstract class BaseTitleActivity : AbsActivity() {
         private set
 
     private var mTitleView: TextView? = null
+
+    private var showMenu: Boolean = false
 
 
     @DrawableRes
@@ -223,6 +228,52 @@ abstract class BaseTitleActivity : AbsActivity() {
      */
     open fun onBackClick(view: View) {
         onBackPressed()
+    }
+
+    //---右侧菜单相关---
+
+    protected fun addMenu(vararg menus: CharSequence) {
+        //更具菜单个数选择对应的布局
+        // TODO: 2020/11/3 选择菜单布局
+    }
+
+    /**
+     * 初始化Menu UI, 只会调用一次
+     *
+     * @param menu
+     * @return
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val condition =
+            fullScreen || skipBaseToolbarLayout() || !isShowToolbar() || bindMenuLayout() == -1
+        if (!condition) {
+            menuInflater.inflate(bindMenuLayout(), menu)
+            return true
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (bindMenuLayout() != -1) {
+            initOptionMenu(menu)
+            return true
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return onMenuSelected(item)
+    }
+
+    protected open fun onMenuSelected(item: MenuItem?): Boolean {
+        return super.onOptionsItemSelected(item!!)
+    }
+
+    protected open fun initOptionMenu(menu: Menu?) {}
+
+    @MenuRes
+    protected open fun bindMenuLayout(): Int {
+        return -1
     }
 
 

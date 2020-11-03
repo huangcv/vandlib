@@ -1,27 +1,27 @@
 package com.cwand.lib.ktx
 
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
-import com.cwand.lib.ktx.ToastUtils
+import com.cwand.lib.ktx.widgets.LoadingDialog
 
 
 abstract class AbsActivity : AppCompatActivity() {
+
+    var clickHideSoftMethodEnable: Boolean = false
 
     //页面是否全屏,已适配>=P的异形刘海屏
     var fullScreen: Boolean = false
@@ -100,7 +100,7 @@ abstract class AbsActivity : AppCompatActivity() {
         }
     }
 
-    private fun fullScreen() {
+    open fun fullScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             val decorView = window.decorView
             decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -126,7 +126,7 @@ abstract class AbsActivity : AppCompatActivity() {
         }
     }
 
-    private fun exitFullScreen() {
+    open fun exitFullScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val lp = window.attributes
             lp.layoutInDisplayCutoutMode =
@@ -147,7 +147,7 @@ abstract class AbsActivity : AppCompatActivity() {
         }
     }
 
-    val loadingDialog: Dialog by lazy { initLoading() ?: Dialog(this) }
+    private var loadingDialog: DialogFragment? = null
 
     @LayoutRes
     abstract fun bindLayout(): Int
@@ -160,22 +160,42 @@ abstract class AbsActivity : AppCompatActivity() {
     }
 
     protected fun showLoading(tip: String?) {
-        showLoading(null, canCancel = false)
+        showLoading(null, canCancel = true)
     }
 
     protected fun showLoading(tip: String?, canCancel: Boolean = false) {
-        if (!loadingDialog.isShowing) {
-            loadingDialog.setCancelable(canCancel)
-            loadingDialog.show()
+        if (loadingDialog == null) {
+            loadingDialog = initLoading(tip, canCancel)
+        }
+        loadingDialog?.let { df ->
+            df.isCancelable = canCancel
+            val dialog = df.dialog
+            if (dialog == null || (!dialog.isShowing)) {
+                if (loadingDialog is LoadingDialog) {
+                    val ld = loadingDialog as LoadingDialog
+                    tip?.let {
+                        ld.updateTitle(it)
+                    }
+                    ld.showLoading(supportFragmentManager)
+                } else {
+                    df.show(supportFragmentManager, "LoadingDialog")
+                }
+            }
         }
     }
 
     protected fun hideLoading() {
-        loadingDialog.dismiss()
+        loadingDialog?.let { df ->
+            if (df is LoadingDialog) {
+                df.hideLoading()
+            } else {
+                df.dismiss()
+            }
+        }
     }
 
-    open fun initLoading(): Dialog? {
-        return null
+    open fun initLoading(title: String?, cancelable: Boolean = true): DialogFragment {
+        return LoadingDialog.get(cancelable, title)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -258,6 +278,43 @@ abstract class AbsActivity : AppCompatActivity() {
         hideLoading()
         closeKeyboard()
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (clickHideSoftMethodEnable) {
+            ev?.let {
+                //把操作放在用户点击的时候 得到当前页面的焦点,ps:有输入框的页面焦点一般会被输入框占据
+                if (it.action == MotionEvent.ACTION_MOVE || it.action == MotionEvent.ACTION_UP) {
+                    val focusView = currentFocus
+                    //判断用户点击的是否是输入框以外的区域
+                    if (isShouldHideKeyboard(focusView, it)) {
+                        closeKeyboard()
+                        (focusView as EditText).clearFocus()
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    private fun isShouldHideKeyboard(view: View?, event: MotionEvent): Boolean {
+        view?.let {
+            //判断得到的焦点控件是否包含EditText
+            if ((view is EditText)) {
+                val l = IntArray(2)
+                view.getLocationInWindow(l)
+                //得到输入框在屏幕中上下左右的位置
+                val left = l[0]
+                val top = l[1]
+                val bottom = top + view.getHeight()
+                val right = left + view.getWidth()
+                return !(event.x > left && event.x < right
+                        && event.y > top && event.y < bottom)
+            }
+        }
+        // 如果焦点不是EditText则忽略
+        return false
+    }
+
 
     /**
      * 关闭系统键盘
