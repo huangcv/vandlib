@@ -237,7 +237,7 @@ abstract class AbsActivity : AppCompatActivity() {
         handleBundle(intent?.extras)
     }
 
-    protected fun toast(tip: String) {
+    protected fun toast(tip: CharSequence) {
         ToastUtils.toast(this, tip)
     }
 

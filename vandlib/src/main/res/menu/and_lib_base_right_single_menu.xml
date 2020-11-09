@@ -3,7 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/and_lib_base_menu_single"
+        android:id="@+id/and_lib_base_menu_single1"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/and_lib_base_menu_single2"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/and_lib_base_menu_single3"
         android:title=""
         app:showAsAction="always" />
 

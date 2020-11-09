@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 
 object ToastUtils {
     @JvmStatic
-    fun toast(context: Context, message: String) {
+    fun toast(context: Context, message: CharSequence) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
