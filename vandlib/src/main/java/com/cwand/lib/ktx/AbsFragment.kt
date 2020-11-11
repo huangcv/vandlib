@@ -2,20 +2,38 @@ package com.cwand.lib.ktx
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.cwand.lib.ktx.ToastUtils
 
 abstract class AbsFragment : Fragment() {
+
+    //状态栏背景颜色,默认灰色
+    @ColorInt
+    var statusBarBgColor: Int = Color.parseColor("#FF292D38")
+        set(value) {
+            if (value != field) {
+                field = value
+                configStatusBarColor()
+            }
+        }
+
+    private fun configStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            requireActivity().window.statusBarColor = statusBarBgColor
+        }
+    }
 
     private val STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN"
 
@@ -27,7 +45,7 @@ abstract class AbsFragment : Fragment() {
 
     private var viewInit = false
     private var firstInit = true
-    private var mContentView: View? = null
+    protected var rootView: View? = null
 
     @LayoutRes
     abstract fun bindLayout(): Int
@@ -111,15 +129,24 @@ abstract class AbsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-        if (mContentView == null) {
-            this.mContentView = inflater.inflate(bindLayout(), container, false)
-        } else {
-            (mContentView!!.parent as ViewGroup).removeAllViewsInLayout()
-        }
+        rootView = createViews(inflater, container, savedInstanceState)
         viewInit = true
-        return mContentView
+        return rootView
+    }
+
+    protected open fun createViews(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        if (rootView == null) {
+            this.rootView = inflater.inflate(bindLayout(), container, false)
+        } else {
+            (rootView!!.parent as ViewGroup).removeAllViewsInLayout()
+        }
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -164,6 +191,15 @@ abstract class AbsFragment : Fragment() {
             requireActivity().window.decorView.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
         )
+    }
+
+    protected fun getStatusBarHeight(): Int {
+        var result = 0
+        val resId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resId > 0) {
+            result = resources.getDimensionPixelSize(resId)
+        }
+        return result
     }
 
 }

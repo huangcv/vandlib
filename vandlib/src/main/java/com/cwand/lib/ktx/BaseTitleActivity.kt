@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -22,7 +23,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import com.cwand.lib.ktx.entity.MenuEntity
 import kotlinx.android.synthetic.main.and_lib_base_title_activity.*
@@ -37,11 +37,15 @@ abstract class BaseTitleActivity : AbsActivity() {
     private var mTitleView: TextView? = null
 
     private val menuList: MutableList<MenuEntity> by lazy { mutableListOf() }
-    private val menuIconList: MutableList<Int> by lazy { mutableListOf() }
 
     private var mMenu: Menu? = null
     private var menuCanReload = false
     private var menuCreateState = 0
+    var toolbarElevation: Float = 0f
+        set(value) {
+            field = value
+            configToolbarElevation()
+        }
 
     @ColorInt
     var defMenuTitleColor = Color.WHITE
@@ -134,6 +138,17 @@ abstract class BaseTitleActivity : AbsActivity() {
                 configNativeActionBar(showBackIcon())
             }
             toolbarIsInit = true
+            configToolbarElevation()
+        }
+    }
+
+    private fun configToolbarElevation() {
+        mToolbar?.let {
+            if (toolbarElevation > 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    it.elevation = toolbarElevation
+                }
+            }
         }
     }
 
@@ -257,7 +272,6 @@ abstract class BaseTitleActivity : AbsActivity() {
             menuList.clear()
             menuList.addAll(subList)
         }
-        println("Item 数据: $menuList")
         initMenu()
     }
 
@@ -287,12 +301,12 @@ abstract class BaseTitleActivity : AbsActivity() {
             menuInflater.inflate(bindMenuLayout(), mMenu)
             return true
         }
-        return super.onCreateOptionsMenu(mMenu)
+        return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         initOptionMenu(menu)
-        return super.onPrepareOptionsMenu(menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -325,11 +339,10 @@ abstract class BaseTitleActivity : AbsActivity() {
                 for (child in it.children) {
                     child.isVisible = false
                 }
-                println("Item 数据: $menuList")
                 for (iv in menuList.withIndex()) {
                     var titleC = defMenuTitleColor
                     if (iv.value.titleColor != -1) {
-                       titleC = iv.value.titleColor
+                        titleC = iv.value.titleColor
                     }
                     val ss = SpannableString(iv.value.title)
                     ss.setSpan(
@@ -342,26 +355,22 @@ abstract class BaseTitleActivity : AbsActivity() {
                         1 -> {
                             val item2 = it.findItem(R.id.and_lib_base_menu_single2)
                             item2.isVisible = true
-                            item2.title = ss
-                            if (iv.value.iconId != -1) {
-                                item2.setIcon(iv.value.iconId)
-                            }
+                            item2
                         }
                         2 -> {
                             val item3 = it.findItem(R.id.and_lib_base_menu_single3)
                             item3.isVisible = true
-                            item3.title = ss
-                            if (iv.value.iconId != -1) {
-                                item3.setIcon(iv.value.iconId)
-                            }
+                            item3
                         }
                         else -> {
                             val item1 = it.findItem(R.id.and_lib_base_menu_single1)
                             item1.isVisible = true
-                            item1.title = ss
-                            if (iv.value.iconId != -1) {
-                                item1.setIcon(iv.value.iconId)
-                            }
+                            item1
+                        }
+                    }.apply {
+                        title = ss
+                        if (iv.value.iconId != -1) {
+                            setIcon(iv.value.iconId)
                         }
                     }
                 }
@@ -376,6 +385,15 @@ abstract class BaseTitleActivity : AbsActivity() {
     @MenuRes
     protected open fun bindMenuLayout(): Int {
         return R.menu.and_lib_base_right_single_menu
+    }
+
+    protected fun getStatusBarHeight(): Int {
+        var result = 0
+        val resId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resId > 0) {
+            result = resources.getDimensionPixelSize(resId)
+        }
+        return result
     }
 
 

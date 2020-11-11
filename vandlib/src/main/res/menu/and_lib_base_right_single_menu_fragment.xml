@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/and_lib_base_menu_f_single1"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/and_lib_base_menu_f_single2"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/and_lib_base_menu_f_single3"
+        android:title=""
+        app:showAsAction="always" />
+
+</menu>
