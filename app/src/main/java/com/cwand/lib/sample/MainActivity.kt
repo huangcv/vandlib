@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.os.Bundle
 import com.cwand.lib.ktx.BaseTitleActivity
 import com.cwand.lib.ktx.entity.MenuEntity
+import com.cwand.lib.ktx.ext.isEmail
+import com.cwand.lib.ktx.ext.onClick
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseTitleActivity() {
@@ -27,6 +29,13 @@ class MainActivity : BaseTitleActivity() {
             toolbarElevation = 30f
         }, 6000)
         putFragment(TestFragment.newInstance(), R.id.fragment_root)
+        loading_view?.onClick{
+        }
+
+        var test1:String? = null
+        var test2 = "huangchunwei@163.com"
+        println(test1.isEmail())
+        println(test2.isEmail())
     }
 
     override fun onMenuClicked(index: Int, title: CharSequence) {
