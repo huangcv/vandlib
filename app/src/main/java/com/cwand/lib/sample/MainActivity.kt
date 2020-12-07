@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.os.Bundle
 import com.cwand.lib.ktx.BaseTitleActivity
 import com.cwand.lib.ktx.entity.MenuEntity
+import com.cwand.lib.ktx.ext.*
+import com.cwand.lib.ktx.utils.Logger
 import com.cwand.lib.ktx.widgets.BFDialog
 
 class MainActivity : BaseTitleActivity() {
@@ -20,9 +22,13 @@ class MainActivity : BaseTitleActivity() {
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
-        addMenu(MenuEntity("1", titleColor = Color.YELLOW),
-            MenuEntity("2", android.R.drawable.ic_menu_close_clear_cancel),
-            MenuEntity("3"))
+        addMenu(MenuEntity("显示弹窗", titleColor = Color.WHITE))
+        "我是测试logD".logD()
+        "我是测试logE".logE()
+        "我是测试logW".logW()
+        "我是测试logI".logI()
+        "我是测试logV".logV()
+        Logger.logD("Logger")
 ////        loading_view.postDelayed(Runnable {
 ////            addMenu(MenuEntity("1", titleColor =  Color.YELLOW), MenuEntity("2", android.R.drawable.ic_menu_close_clear_cancel), MenuEntity("3"))
 ////        }, 3000)

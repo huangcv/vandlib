@@ -9,6 +9,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.cwand.lib.ktx.R
 
 /**
@@ -28,8 +30,23 @@ open class BFDialog : AppCompatDialogFragment() {
     @LayoutRes
     open fun bindLayout(): Int = -1
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initBundle(arguments)
+    }
+
     protected fun initBundle(bundle: Bundle?) {
 
+    }
+
+    fun dialogCancelable(cancelable: Boolean): BFDialog {
+        paramsBuilder.canCancelable = cancelable
+        return this@BFDialog
+    }
+
+    fun dialogCanTouchOutside(touchOutside: Boolean): BFDialog {
+        paramsBuilder.cancelOnTouchOutside = touchOutside
+        return this@BFDialog
     }
 
     fun hideTitle(hide: Boolean): BFDialog {
@@ -114,13 +131,21 @@ open class BFDialog : AppCompatDialogFragment() {
     protected var verticalLineView: View? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(requireContext(), R.style.BFDialogTheme)
+        return Dialog(requireContext(), R.style.BFDialogTheme).apply {
+            setCancelable(paramsBuilder.canCancelable)
+            setCanceledOnTouchOutside(paramsBuilder.cancelOnTouchOutside)
+        }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         val rootView = inflater.inflate(R.layout.and_lib_base_dialog_fragment, null, false)
         if (bindLayout() != -1) {
-            val contentView = rootView.findViewById<FrameLayout>(R.id.fl_and_lib_base_dialog_fragment_content)
+            val contentView =
+                rootView.findViewById<FrameLayout>(R.id.fl_and_lib_base_dialog_fragment_content)
             contentView.removeAllViews()
             customContentView = inflater.inflate(bindLayout(), contentView, true)
         }
@@ -141,6 +166,10 @@ open class BFDialog : AppCompatDialogFragment() {
     }
 
     private fun refreshBaseUI() {
+        dialog?.let {
+            it.setCancelable(paramsBuilder.canCancelable)
+            it.setCanceledOnTouchOutside(paramsBuilder.cancelOnTouchOutside)
+        }
         //标题
         titleView?.let {
             it.text = paramsBuilder.title
@@ -161,7 +190,8 @@ open class BFDialog : AppCompatDialogFragment() {
             it.visibility = if (paramsBuilder.hideConfirm) View.GONE else View.VISIBLE
         }
         //中间竖线
-        verticalLineView?.visibility = if (paramsBuilder.hideCancel || paramsBuilder.hideConfirm) View.GONE else View.VISIBLE
+        verticalLineView?.visibility =
+            if (paramsBuilder.hideCancel || paramsBuilder.hideConfirm) View.GONE else View.VISIBLE
     }
 
     private fun findViews(contentView: View) {
@@ -181,7 +211,8 @@ open class BFDialog : AppCompatDialogFragment() {
             confirmView = contentView.findViewById(R.id.tv_and_lib_base_dialog_fragment_confirm)
         }
         if (verticalLineView == null) {
-            verticalLineView = contentView.findViewById(R.id.tv_and_lib_base_dialog_fragment_vertical_line)
+            verticalLineView =
+                contentView.findViewById(R.id.tv_and_lib_base_dialog_fragment_vertical_line)
         }
         cancelView?.setOnClickListener {
             if (paramsBuilder.autoCancelClickDismiss) {
@@ -201,6 +232,14 @@ open class BFDialog : AppCompatDialogFragment() {
 
     }
 
+    fun showFragment(fragment: Fragment) {
+        show(fragment.childFragmentManager, this::class.java.name)
+    }
+
+    fun showFragment(fragmentManager: FragmentManager) {
+        show(fragmentManager, this::class.java.name)
+    }
+
     override fun onStart() {
         super.onStart()
         dialog?.let { d ->
@@ -214,13 +253,26 @@ open class BFDialog : AppCompatDialogFragment() {
         dialog.window?.let {
             it.setGravity(getGravity())
             wm.defaultDisplay.getMetrics(dm)
-            val width = dm.widthPixels * 0.773f
-            it.setLayout(width.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+            it.setLayout(widthPixels(dm.widthPixels), heightPixels(dm.heightPixels))
         }
     }
 
-    protected open fun getGravity():Int{
-        return Gravity.CENTER
+    protected open fun widthPixels(widthPixels: Int): Int {
+        if (paramsBuilder.fullScreenWidth) {
+            return widthPixels
+        }
+        return (widthPixels * 0.773f).toInt()
+    }
+
+    protected open fun heightPixels(heightPixels: Int): Int {
+        if (paramsBuilder.fullScreenHeight) {
+            return heightPixels
+        }
+        return ViewGroup.LayoutParams.WRAP_CONTENT
+    }
+
+    protected open fun getGravity(): Int {
+        return paramsBuilder.gravity
     }
 
     inner class ParamsBuilder {

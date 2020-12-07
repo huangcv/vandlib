@@ -20,8 +20,8 @@ abstract class BaseVMActivity<VM : BaseViewModel> : BaseTitleActivity() {
         }
     }
 
-    abstract fun initObservers()
     abstract fun createViewModel(): VM
+    abstract fun initObservers()
 
     override fun innerInit(savedInstanceState: Bundle?) {
         super.innerInit(savedInstanceState)

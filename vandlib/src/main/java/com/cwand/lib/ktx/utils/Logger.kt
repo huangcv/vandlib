@@ -21,6 +21,9 @@ class Logger {
     companion object {
         var isShowLog = true
         var defaultTag = "Logger"
+        fun logD(msg:String, tag: String = defaultTag) {
+            log(tag, msg, null, Level.D)
+        }
         private fun log(tag: String, msg: Any, throwable: Throwable?, level: Level) {
             if (!isShowLog) {
                 return
@@ -32,27 +35,27 @@ class Logger {
             when (level) {
                 Level.V -> {
                     Log.v(tag,
-                        if (stackTrace == null) msg.toString() else  "( ${stackTrace.fileName} : ${stackTrace.lineNumber} ) ---> ".plus(msg.toString()),
+                        if (stackTrace == null) msg.toString() else  "(${stackTrace.fileName}:${stackTrace.lineNumber}) ---> ".plus(msg.toString()),
                         throwable)
                 }
                 Level.D -> {
                     Log.d(tag,
-                        if (stackTrace == null) msg.toString() else  "( ${stackTrace.fileName} : ${stackTrace.lineNumber} ) ---> ".plus(msg.toString()),
+                        if (stackTrace == null) msg.toString() else  "(${stackTrace.fileName}:${stackTrace.lineNumber}) ---> ".plus(msg.toString()),
                         throwable)
                 }
                 Level.I -> {
                     Log.i(tag,
-                        if (stackTrace == null) msg.toString() else  "( ${stackTrace.fileName} : ${stackTrace.lineNumber} ) ---> ".plus(msg.toString()),
+                        if (stackTrace == null) msg.toString() else  "(${stackTrace.fileName}:${stackTrace.lineNumber}) ---> ".plus(msg.toString()),
                         throwable)
                 }
                 Level.W -> {
                     Log.w(tag,
-                        if (stackTrace == null) msg.toString() else  "( ${stackTrace.fileName} : ${stackTrace.lineNumber} ) ---> ".plus(msg.toString()),
+                        if (stackTrace == null) msg.toString() else  "(${stackTrace.fileName}:${stackTrace.lineNumber}) ---> ".plus(msg.toString()),
                         throwable)
                 }
                 Level.E -> {
                     Log.e(tag,
-                        if (stackTrace == null) msg.toString() else  "( ${stackTrace.fileName} : ${stackTrace.lineNumber} ) ---> ".plus(msg.toString()),
+                        if (stackTrace == null) msg.toString() else  "(${stackTrace.fileName}:${stackTrace.lineNumber}) ---> ".plus(msg.toString()),
                         throwable)
                 }
             }
@@ -69,7 +72,7 @@ class Logger {
                         }
                     }
                     if (stackTraceElement.fileName != null) {
-                        if (stackTraceElement.fileName == "VMStack.java" || stackTraceElement.fileName == "Thread.java") {
+                        if (stackTraceElement.fileName == "VMStack.java" || stackTraceElement.fileName == "Thread.java" || stackTraceElement.fileName == "Logger.kt") {
                             continue
                         }
                     }
@@ -81,6 +84,4 @@ class Logger {
         }
 
     }
-
-
 }

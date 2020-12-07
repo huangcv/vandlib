@@ -1,5 +1,6 @@
 package com.cwand.lib.sample
 
+import android.view.Gravity
 import com.cwand.lib.ktx.widgets.BFDialog
 
 /**
@@ -10,6 +11,7 @@ import com.cwand.lib.ktx.widgets.BFDialog
  */
 class TestDialog : BFDialog() {
 
-    
-
+    override fun getGravity(): Int {
+        return Gravity.CENTER
+    }
 }
