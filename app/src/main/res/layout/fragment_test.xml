@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Fragment"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+
+    <com.cwand.lib.ktx.widgets.LightningView
+        android:id="@+id/lightning"
+        android:background="@color/colorAccent"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center" />
 
 </FrameLayout>

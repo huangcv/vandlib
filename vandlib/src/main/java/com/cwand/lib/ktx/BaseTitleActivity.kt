@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.Menu
@@ -36,7 +37,7 @@ abstract class BaseTitleActivity : AbsActivity() {
 
     private var mTitleView: TextView? = null
 
-    private val menuList: MutableList<MenuEntity> by lazy { mutableListOf() }
+    private val menuList: MutableList<MenuEntity> by lazy { mutableListOf<MenuEntity>() }
 
     private var mMenu: Menu? = null
     private var menuCanReload = false
@@ -49,6 +50,7 @@ abstract class BaseTitleActivity : AbsActivity() {
 
     @ColorInt
     var defMenuTitleColor = Color.WHITE
+    var defMenuTitleSize = 14
 
 
     @DrawableRes
@@ -71,7 +73,7 @@ abstract class BaseTitleActivity : AbsActivity() {
     }
 
     @StringRes
-    open fun titleTextRes(): Int = View.NO_ID
+    abstract fun titleTextRes(): Int
 
     open fun isShowToolbar(): Boolean = true
 
@@ -94,16 +96,32 @@ abstract class BaseTitleActivity : AbsActivity() {
         return ContextCompat.getColor(this, android.R.color.white)
     }
 
+    override fun bindLayout(): Int = -1
+    override fun initViews(savedInstanceState: Bundle?) {
+
+    }
+
+    override fun initListeners() {
+
+    }
+
+    override fun initData() {
+    }
+
     override fun innerInit(savedInstanceState: Bundle?) {
         if (!skipBaseToolbarLayout()) {
             setContentView(R.layout.and_lib_base_title_activity)
             initToolbarConfig(isShowToolbar())
-            and_lib_base_content_root?.let { root ->
-                root.removeAllViews()
-                LayoutInflater.from(this).inflate(bindLayout(), root, true)
+            if (bindLayout() != -1) {
+                and_lib_base_content_root?.let { root ->
+                    root.removeAllViews()
+                    LayoutInflater.from(this).inflate(bindLayout(), root, true)
+                }
             }
         } else {
-            setContentView(bindLayout())
+            if (bindLayout() != -1) {
+                setContentView(bindLayout())
+            }
         }
         initViews(savedInstanceState)
         initListeners()
@@ -129,16 +147,11 @@ abstract class BaseTitleActivity : AbsActivity() {
             if (!it.isShown) {
                 it.visibility = View.VISIBLE
             }
-            if (mTitleView != null) {
-                configTitle(mTitleView!!)
-            }
             if (!toolbarIsInit) {
-                configToolbar(it)
                 setSupportActionBar(it)
-                configNativeActionBar(showBackIcon())
+                configToolbar(it)
+                toolbarIsInit = true
             }
-            toolbarIsInit = true
-            configToolbarElevation()
         }
     }
 
@@ -160,7 +173,16 @@ abstract class BaseTitleActivity : AbsActivity() {
         //app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         //    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         //标题栏背景色,默认跟随状态栏颜色
+        //设置标题栏背景色
         toolsBar.setBackgroundColor(statusBarBgColor)
+        //设置标题
+        mTitleView?.let {
+            configTitle(it)
+        }
+        //设置标题栏
+        configNativeActionBar(showBackIcon())
+        //设置标题栏阴影特效
+        configToolbarElevation()
     }
 
     /**
@@ -312,13 +334,13 @@ abstract class BaseTitleActivity : AbsActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.and_lib_base_menu_single1 -> {
-                onMenuClicked(0, menuList[0].title)
+                onMenuClicked(item.itemId, menuList[0].title)
             }
             R.id.and_lib_base_menu_single2 -> {
-                onMenuClicked(1, menuList[1].title)
+                onMenuClicked(item.itemId, menuList[1].title)
             }
             R.id.and_lib_base_menu_single3 -> {
-                onMenuClicked(2, menuList[2].title)
+                onMenuClicked(item.itemId, menuList[2].title)
             }
             else -> {
             }
@@ -341,33 +363,49 @@ abstract class BaseTitleActivity : AbsActivity() {
                 }
                 for (iv in menuList.withIndex()) {
                     var titleC = defMenuTitleColor
+                    var titleS = defMenuTitleSize
                     if (iv.value.titleColor != -1) {
                         titleC = iv.value.titleColor
                     }
+                    if (iv.value.titleSize != -1) {
+                        titleS = iv.value.titleSize
+                    }
                     val ss = SpannableString(iv.value.title)
+                    //字体颜色
                     ss.setSpan(
                         ForegroundColorSpan(titleC),
                         0,
                         iv.value.title.length,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
+                    //字体大小
+                    ss.setSpan(AbsoluteSizeSpan(titleS, true),
+                        0,
+                        iv.value.title.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     when (iv.index) {
                         1 -> {
                             val item2 = it.findItem(R.id.and_lib_base_menu_single2)
-                            item2.isVisible = true
+                            item2?.let { i2 ->
+                                i2.isVisible = true
+                            }
                             item2
                         }
                         2 -> {
                             val item3 = it.findItem(R.id.and_lib_base_menu_single3)
-                            item3.isVisible = true
+                            item3?.let {i3 ->
+                                i3.isVisible = true
+                            }
                             item3
                         }
                         else -> {
                             val item1 = it.findItem(R.id.and_lib_base_menu_single1)
-                            item1.isVisible = true
+                            item1?.let { i1 ->
+                                i1.isVisible = true
+                            }
                             item1
                         }
-                    }.apply {
+                    }?.apply {
                         title = ss
                         if (iv.value.iconId != -1) {
                             setIcon(iv.value.iconId)
@@ -378,7 +416,7 @@ abstract class BaseTitleActivity : AbsActivity() {
         }
     }
 
-    protected open fun onMenuClicked(index: Int, title: CharSequence) {
+    protected open fun onMenuClicked(id: Int, title: CharSequence) {
 
     }
 
@@ -396,5 +434,10 @@ abstract class BaseTitleActivity : AbsActivity() {
         return result
     }
 
+    /**
+     * 接受来自Fragment发送来的事件消息
+     */
+    override fun onEventAction(id: Int, extraData: Any?) {
+    }
 
 }

@@ -16,10 +16,13 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
+import com.cwand.lib.ktx.utils.ActManager
 import com.cwand.lib.ktx.widgets.LoadingDialog
 
 
-abstract class AbsActivity : AppCompatActivity() {
+abstract class AbsActivity : AppCompatActivity(), OnEventAction {
+
+    private var currentFragment: Fragment? = null
 
     var clickHideSoftMethodEnable: Boolean = false
 
@@ -200,10 +203,19 @@ abstract class AbsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        addActivityToStack()
         handleBundle(savedInstanceState)
         initStatus = START
         initStatusBar()
         innerInit(savedInstanceState)
+    }
+
+    protected open fun addActivityToStack() {
+        ActManager.add(this)
+    }
+
+    protected open fun removeActivityFromStack() {
+        ActManager.remove(this)
     }
 
     open fun initStatusBar() {
@@ -250,6 +262,7 @@ abstract class AbsActivity : AppCompatActivity() {
     }
 
     protected fun putFragment(fragment: Fragment, @IdRes contentId: Int, cleanView: Boolean) {
+        currentFragment = fragment
         try {
             if (cleanView) {
                 try {
@@ -275,6 +288,7 @@ abstract class AbsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        removeActivityFromStack()
         hideLoading()
         closeKeyboard()
     }
@@ -315,6 +329,35 @@ abstract class AbsActivity : AppCompatActivity() {
         return false
     }
 
+    /**
+     * 发送动作到当前显示的Fragment中
+     */
+    protected fun sendEventToFragment(id: Int, extraData: Any? = null) {
+        if (currentFragment == null) {
+            if (supportFragmentManager.fragments.isNotEmpty()) {
+                currentFragment = supportFragmentManager.fragments[0]
+            }
+        }
+        currentFragment?.let {
+            if (it is OnEventAction) {
+                it.onEventAction(id, extraData)
+            }
+        }
+    }
+
+    /**
+     * 发送动作到所有的Fragment
+     */
+    protected fun sendEventToAllFragment(id: Int, extraData: Any? = null) {
+        if (supportFragmentManager.fragments.isNotEmpty()) {
+            supportFragmentManager.fragments.forEach {
+                if (it is OnEventAction) {
+                    it.onEventAction(id, extraData)
+                }
+            }
+        }
+    }
+
 
     /**
      * 关闭系统键盘
@@ -325,5 +368,8 @@ abstract class AbsActivity : AppCompatActivity() {
             window.decorView.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
         )
+    }
+
+    override fun onEventAction(id: Int, extraData: Any?) {
     }
 }

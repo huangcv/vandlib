@@ -17,7 +17,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
-abstract class AbsFragment : Fragment() {
+abstract class AbsFragment : Fragment(), OnEventAction {
 
     //状态栏背景颜色,默认灰色
     @ColorInt
@@ -34,6 +34,27 @@ abstract class AbsFragment : Fragment() {
             requireActivity().window.statusBarColor = statusBarBgColor
         }
     }
+
+    //页面是否全屏,已适配>=P的异形刘海屏
+    var fullScreen: Boolean = false
+        set(value) {
+            if (value != field) {
+                field = value
+                if (field) {
+                    this@AbsFragment.activity?.let {
+                        if (it is AbsActivity) {
+                            it.fullScreen()
+                        }
+                    }
+                } else {
+                    this@AbsFragment.activity?.let {
+                        if (it is AbsActivity) {
+                            it.exitFullScreen()
+                        }
+                    }
+                }
+            }
+        }
 
     private val STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN"
 
@@ -151,7 +172,11 @@ abstract class AbsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews(savedInstanceState, view)
+        innerInit(arguments, view)
+    }
+
+    protected open fun innerInit(arguments: Bundle?, view: View) {
+        initViews(arguments, view)
         initListeners()
     }
 
@@ -200,6 +225,23 @@ abstract class AbsFragment : Fragment() {
             result = resources.getDimensionPixelSize(resId)
         }
         return result
+    }
+
+    /**
+     * 发送动作到Activity
+     */
+    protected fun sendEventToActivity(id: Int, extraData: Any? = null) {
+        activity?.let {
+            if (it is OnEventAction) {
+                it.onEventAction(id, extraData)
+            }
+        }
+    }
+
+    /**
+     * 接受来自Fragment发送过来的时间
+     */
+    override fun onEventAction(id: Int, extraData: Any?) {
     }
 
 }
