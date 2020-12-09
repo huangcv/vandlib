@@ -23,12 +23,14 @@ class MainActivity : BaseTitleActivity() {
 
     override fun initViews(savedInstanceState: Bundle?) {
         addMenu(MenuEntity("显示弹窗", titleColor = Color.WHITE))
-        "我是测试logD".logD()
-        "我是测试logE".logE()
-        "我是测试logW".logW()
-        "我是测试logI".logI()
-        "我是测试logV".logV()
-        Logger.logD("Logger")
+//        "我是测试logD".logD()
+//        "我是测试logE".logE()
+//        "我是测试logW".logW()
+//        "我是测试logI".logI()
+//        "我是测试logV".logV()
+//        val list = mutableListOf<String>()
+//        list.logD()
+//        Logger.logD("Logger")
 ////        loading_view.postDelayed(Runnable {
 ////            addMenu(MenuEntity("1", titleColor =  Color.YELLOW), MenuEntity("2", android.R.drawable.ic_menu_close_clear_cancel), MenuEntity("3"))
 ////        }, 3000)
