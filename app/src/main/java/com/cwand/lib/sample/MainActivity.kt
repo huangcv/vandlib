@@ -1,14 +1,16 @@
 package com.cwand.lib.sample
 
+import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import com.cwand.lib.ktx.BaseTitleActivity
 import com.cwand.lib.ktx.entity.MenuEntity
-import com.cwand.lib.ktx.ext.*
-import com.cwand.lib.ktx.utils.Logger
-import com.cwand.lib.ktx.widgets.BFDialog
+import com.cwand.lib.ktx.ext.logD
+import com.cwand.lib.ktx.utils.NetworkUtils
 
 class MainActivity : BaseTitleActivity() {
+
     override fun titleTextRes(): Int {
         return R.string.app_name
     }
@@ -22,7 +24,7 @@ class MainActivity : BaseTitleActivity() {
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
-        addMenu(MenuEntity("显示弹窗", titleColor = Color.WHITE))
+        addMenu(MenuEntity("中文"), MenuEntity("英文"))
 //        "我是测试logD".logD()
 //        "我是测试logE".logE()
 //        "我是测试logW".logW()
@@ -50,15 +52,41 @@ class MainActivity : BaseTitleActivity() {
     }
 
     override fun onMenuClicked(id: Int, title: CharSequence) {
-        toast(title)
-        val dialog = TestDialog()
-        dialog.show(supportFragmentManager, "TestDialog")
+//        toast(title)
+//        val dialog = TestDialog()
+//        dialog.show(supportFragmentManager, "TestDialog")
+        if (title == "中文") {
+            changeLanguage("zh") {
+                restartActivity()
+            }
+        } else {
+            changeLanguage("en") {
+                restartActivity()
+            }
+        }
+    }
+
+    private fun restartActivity() {
+        // 不同的版本，使用不同的重启方式，达到最好的效果
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            // 6.0 以及以下版本，使用这种方式，并给 activity 添加启动动画效果，可以规避黑屏和闪烁问题
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        } else {
+            // 6.0 以上系统直接调用重新创建函数，可以达到无缝切换的效果
+            recreate()
+        }
     }
 
     override fun initListeners() {
     }
 
     override fun initData() {
+        Thread {
+            NetworkUtils.networkConnected().logD()
+        }.start()
     }
 
 }

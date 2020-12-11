@@ -32,7 +32,7 @@ fun Any.safeRun(block: () -> Unit, exception: (Exception) -> Unit = {}) {
 }
 
 fun Activity.delayRun(block: () -> Unit, duration: Long) {
-    window.decorView.postDelayed(Runnable {
+    window.decorView.postDelayed({
         if (!isFinishing) {
             block()
         }
@@ -41,7 +41,7 @@ fun Activity.delayRun(block: () -> Unit, duration: Long) {
 
 fun Fragment.delayRun(block: () -> Unit, duration: Long) {
     activity?.let {
-        it.window.decorView.postDelayed(Runnable {
+        it.window.decorView.postDelayed({
             if (!it.isFinishing) {
                 block()
             }

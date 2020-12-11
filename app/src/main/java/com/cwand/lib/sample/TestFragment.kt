@@ -51,6 +51,6 @@ class TestFragment : BaseTitleFragment() {
     }
 
     override fun lazyInit() {
-        toast("懒加载数据")
+//        toast("懒加载数据")
     }
 }

@@ -1,5 +1,6 @@
 package com.cwand.lib.ktx
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import com.cwand.lib.ktx.utils.ActManager
+import com.cwand.lib.ktx.utils.LanguageUtils
 import com.cwand.lib.ktx.widgets.LoadingDialog
 
 
@@ -201,6 +203,10 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
         return LoadingDialog.get(cancelable, title)
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addActivityToStack()
@@ -271,7 +277,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
                     e.printStackTrace()
                 }
             }
-            val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.replace(contentId, fragment)
             fragmentTransaction.setMaxLifecycle(fragment, Lifecycle.State.RESUMED)
             fragmentTransaction.commitNowAllowingStateLoss()
@@ -371,5 +377,35 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     }
 
     override fun onEventAction(id: Int, extraData: Any?) {
+    }
+
+    /**
+     * restart举栗:
+     *   // 不同的版本，使用不同的重启方式，达到最好的效果
+     *   if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+     *       // 6.0 以及以下版本，使用这种方式，并给 activity 添加启动动画效果，可以规避黑屏和闪烁问题
+     *       val intent = Intent(this, MainActivity::class.java)
+     *       intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+     *       startActivity(intent)
+     *       finish()
+     *   } else {
+     *       // 6.0 以上系统直接调用重新创建函数，可以达到无缝切换的效果
+     *       recreate()
+     *   }
+     *
+     */
+    protected fun changeLanguage(language: String, restart: () -> Unit = {}) {
+        if (!LanguageUtils.isSameLanguage(this, language)) {
+            try {// 版本低于 android 8.0 不执行该方法
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    // 注意，这里的 context 不能传 Application 的 context
+                    LanguageUtils.changeAppLanguage(this, language)
+                }
+                LanguageUtils.saveLanguage(this, LanguageUtils.LANGUAGE_SP_KEY, language)
+                restart()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

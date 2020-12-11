@@ -6,9 +6,18 @@
 
     <com.cwand.lib.ktx.widgets.LightningView
         android:id="@+id/lightning"
-        android:background="@color/colorAccent"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/home_coin_news"
+        android:textColor="@android:color/white"
+        android:textSize="29sp" />
 
 </FrameLayout>

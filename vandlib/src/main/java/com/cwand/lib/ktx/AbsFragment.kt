@@ -116,21 +116,25 @@ abstract class AbsFragment : Fragment(), OnEventAction {
                 val isHidden =
                     savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN)
                 if (fragmentManager != null) {
-                    val ft = fragmentManager!!.beginTransaction()
-                    if (isHidden) {
-                        ft.hide(this)
-                    } else {
-                        ft.show(this)
+                    if (isDetached) {
+                        val ft = fragmentManager!!.beginTransaction()
+                        if (isHidden) {
+                            ft.hide(this)
+                        } else {
+                            ft.show(this)
+                        }
+                        ft.commitNowAllowingStateLoss()
                     }
-                    ft.commitNowAllowingStateLoss()
                 } else {
-                    val ft = childFragmentManager.beginTransaction()
-                    if (isHidden) {
-                        ft.hide(this)
-                    } else {
-                        ft.show(this)
+                    if (isDetached) {
+                        val ft = childFragmentManager.beginTransaction()
+                        if (isHidden) {
+                            ft.hide(this)
+                        } else {
+                            ft.show(this)
+                        }
+                        ft.commitNowAllowingStateLoss()
                     }
-                    ft.commitNowAllowingStateLoss()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
