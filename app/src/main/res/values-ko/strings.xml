@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Jasper-->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">vand</string>
     <!--快捷菜单-->
@@ -13,4 +13,11 @@
     <string name="home_coin_news">코인뉴스</string>
 
     <string name="contract_open_a_contract_account">선물거래계정 개통하러가기?</string>
+    <string name="switch_language">언어 전환</string>
+    <string name="lang_auto">자동 적</string>
+    <string name="lang_zh">중국어</string>
+    <string name="lang_ft">번 체</string>
+    <string name="lang_en">영어</string>
+    <string name="lang_ko">한글</string>
+    <string name="confirm">확정 하 다</string>
 </resources>

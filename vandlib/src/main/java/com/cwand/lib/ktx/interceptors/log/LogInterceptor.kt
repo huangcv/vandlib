@@ -41,5 +41,10 @@ class LogInterceptor private constructor(private val builder: Builder) : Interce
     class Builder {
         var level = LogLevel.ALL
         var logger = ILogger.DEFAULT
+
+        open fun build():LogInterceptor {
+            return LogInterceptor(this)
+        }
+
     }
 }

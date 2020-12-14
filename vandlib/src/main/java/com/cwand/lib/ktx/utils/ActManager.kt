@@ -1,7 +1,9 @@
 package com.cwand.lib.ktx.utils
 
 import android.app.Activity
+import android.content.Intent
 import android.nfc.Tag
+import android.os.Build
 import android.text.TextUtils
 import com.cwand.lib.ktx.ext.safeRun
 import java.util.*
@@ -131,6 +133,11 @@ class ActManager private constructor() {
         @JvmStatic
         fun finishAllExclude(alias: String): Boolean {
             return instance.finishAllExcludeActivityByAlias(alias)
+        }
+
+        @JvmStatic
+        fun restartActivity(alias: String) {
+            instance.restartActivityAlias(alias)
         }
     }
 
@@ -295,6 +302,21 @@ class ActManager private constructor() {
         } catch (e: Exception) {
         }
         return true
+    }
+
+    private fun restartActivityAlias(alias: String) {
+        getActivityByAlias(alias)?.let {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                // 6.0 以及以下版本，使用这种方式，并给 activity 添加启动动画效果，可以规避黑屏和闪烁问题
+                val intent = Intent(it, it::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                it.startActivity(intent)
+                it.finish()
+            } else {
+                // 6.0 以上系统直接调用重新创建函数，可以达到无缝切换的效果
+                it.recreate()
+            }
+        }
     }
 
 }

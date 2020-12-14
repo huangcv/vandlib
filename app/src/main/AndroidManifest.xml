@@ -21,6 +21,9 @@
         </activity>
         <activity android:name=".Test3" />
         <activity android:name=".Test4" />
+        <activity
+            android:name=".SwitchLanguageActivity"
+            android:label="切换语言" />
     </application>
 
 </manifest>

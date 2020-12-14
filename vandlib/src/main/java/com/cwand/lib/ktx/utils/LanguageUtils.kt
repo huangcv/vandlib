@@ -17,6 +17,8 @@ import java.util.*
  */
 
 enum class LanguageType(val language: String) {
+    AUTO("Auto"),
+
     //简体中文
     CHINESE("zh_CN"),
 
@@ -81,6 +83,9 @@ class LanguageUtils {
         @JvmStatic
         private fun getLocaleByLanguage(language: String): Locale {
             return when (language) {
+                LanguageType.AUTO.language -> {
+                    Locale.getDefault()
+                }
                 LanguageType.CHINESE.language -> {
                     Locale.SIMPLIFIED_CHINESE
                 }
