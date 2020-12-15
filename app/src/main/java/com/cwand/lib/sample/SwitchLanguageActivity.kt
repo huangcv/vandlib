@@ -10,7 +10,6 @@ import com.cwand.lib.ktx.utils.ActManager
 import com.cwand.lib.ktx.utils.LanguageType
 import com.cwand.lib.ktx.utils.LanguageUtils
 import kotlinx.android.synthetic.main.activity_switch_language.*
-import org.intellij.lang.annotations.Language
 
 /**
  * @author : chunwei

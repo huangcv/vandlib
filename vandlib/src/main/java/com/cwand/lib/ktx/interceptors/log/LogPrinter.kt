@@ -1,6 +1,5 @@
 package com.cwand.lib.ktx.interceptors.log
 
-import com.cwand.lib.ktx.ext.logD
 import okhttp3.*
 import okhttp3.internal.http.promisesBody
 import okio.Buffer
@@ -43,16 +42,12 @@ class LogPrinter private constructor() {
             val protocol = (chain.connection()?.protocol() ?: Protocol.HTTP_1_1).toString()
             val urlStr = "Request ---> $requestUrl $protocol $requestMethod $LINE_SEPARATOR"
             requestLogContainer.append(urlStr)
-            //打印请求地址
-//            builder.logger.log(urlStr)
             //请求头
             requestLogContainer.append("Headers:$LINE_SEPARATOR")
             val requestHeaders = request.headers
             val headerStr = getHeaderStr(requestHeaders)
             requestLogContainer.append(headerStr)
             requestLogContainer.append(LINE_SEPARATOR)
-            //打印请求头
-//            builder.logger.log(headerStr)
             //请求体
             val requestBody = request.body
             val bodyStr = requestBody?.let {
@@ -73,21 +68,24 @@ class LogPrinter private constructor() {
             response: Response,
             receivedMs: Long,
         ) {
+            //为了不让日志被隔开,这里是将所有信息放到一起,一次打印出来
+            val responseLogContainer = StringBuilder()
             //请求地址
             val requestUrl = request.url.toUrl().toString()
             //响应码
             val code = response.code
             val msg = response.message
             val urlStr = "Response <--- $requestUrl（${receivedMs}ms）$LINE_SEPARATOR"
-            builder.logger.log(urlStr)
-            val codeStr = "Status: $code  $msg $LINE_SEPARATOR"
-            builder.logger.log(codeStr)
+            responseLogContainer.append(urlStr)
+//            builder.logger.log(urlStr)
+            val codeStr = "Status: $LINE_SEPARATOR  $code  $msg $LINE_SEPARATOR"
+            responseLogContainer.append(codeStr)
             //响应头
-            val headers = response.headers
-            val headerStr = getHeaderStr(headers)
+            val headerStr = getHeaderStr(response.headers)
+            responseLogContainer.append("Headers: $LINE_SEPARATOR$headerStr")
+            builder.logger.log(responseLogContainer.toString())
+            builder.logger.log("Body: $LINE_SEPARATOR")
             printResponseLog(builder, getResponseStr(response))
-            //结束打印
-//            builder.logger.log()
         }
 
         private fun printResponseLog(builder: LogInterceptor.Builder, responseStr: String) {
@@ -140,7 +138,7 @@ class LogPrinter private constructor() {
                     return "End request - binary ${buffer.size}:byte body omitted"
                 }
                 if (contentLength != 0L) {
-                    return getJsonString(buffer.clone().readString(charset))
+                    return getJsonString(buffer.clone().readString(charset)).plus("${LINE_SEPARATOR}End request")
                 }
                 return if (gzippedLength != null) {
                     "End request - ${buffer.size}:byte, $gzippedLength-gzipped-byte body"

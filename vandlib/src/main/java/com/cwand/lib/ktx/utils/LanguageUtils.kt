@@ -17,7 +17,8 @@ import java.util.*
  */
 
 enum class LanguageType(val language: String) {
-    AUTO("Auto"),
+    //跟随系统
+    AUTO("auto"),
 
     //简体中文
     CHINESE("zh_CN"),

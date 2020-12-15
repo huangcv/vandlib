@@ -24,6 +24,8 @@ import com.cwand.lib.ktx.widgets.LoadingDialog
 
 abstract class AbsActivity : AppCompatActivity(), OnEventAction {
 
+    var multiLanguageSupport = false
+
     private var currentFragment: Fragment? = null
 
     var clickHideSoftMethodEnable: Boolean = false
@@ -204,7 +206,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     }
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase))
+        super.attachBaseContext(if (multiLanguageSupport) LanguageUtils.attachBaseContext(newBase) else newBase)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -395,6 +397,9 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
      *
      */
     protected fun changeLanguage(language: String, restart: () -> Unit = {}) {
+        if (!multiLanguageSupport) {
+            return
+        }
         if (!LanguageUtils.isSameLanguage(this, language)) {
             try {// 版本低于 android 8.0 不执行该方法
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
