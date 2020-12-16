@@ -29,7 +29,7 @@ class LogInterceptor private constructor(private val builder: Builder) : Interce
             LogPrinter.printResponse(builder, request, response, receivedMs)
             return response
         } catch (e: Exception) {
-            builder.logger.log("the HTTP request is failed: $e ${LogPrinter.LINE_SEPARATOR}")
+            LogPrinter.printErrorRequest(builder, request, "$e")
             throw  e
         }
     }

@@ -1,7 +1,10 @@
 package com.cwand.lib.sample
 
-import retrofit2.Call
-import retrofit2.http.*
+import com.cwand.lib.ktx.entity.BaseResp
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Headers
+import retrofit2.http.POST
 
 /**
  * @author : chunwei
@@ -11,7 +14,8 @@ import retrofit2.http.*
  */
 interface TestApi {
     @Headers("key:value", "key:value")
-    @POST("https://run.mocky.io/v3/8fe6bceb-3bd1-4cc3-85cf-be4cc12cc93c")
+//    @POST("https://run.mocky.io/v3/fde178be-e4f7-4013-841f-de21ee3b6c9e")
+    @POST("https://run.mocky.io/v3/2459828c-865f-461a-b354-107c4aec650b")
     @FormUrlEncoded
-    open fun test(@FieldMap params: Map<String, String>): Call<TestData>?
+    suspend fun test(@FieldMap params: Map<String, String>): BaseResp<List<TestBean>?>
 }

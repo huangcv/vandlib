@@ -2,6 +2,7 @@ package com.cwand.lib.sample
 
 import android.app.Application
 import android.content.res.Configuration
+import com.cwand.lib.ktx.AndLib
 import com.cwand.lib.ktx.ext.logD
 
 /**
@@ -14,6 +15,7 @@ class MyApplication:Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AndLib.init(this)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

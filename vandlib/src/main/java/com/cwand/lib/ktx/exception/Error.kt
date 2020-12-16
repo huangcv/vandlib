@@ -30,5 +30,10 @@ enum class Error(val code: Int, val error: String) {
     /**
      * 连接超时
      */
-    TIMEOUT_ERROR(1006, "网络连接超时，请稍后重试");
+    TIMEOUT_ERROR(1006, "网络连接超时，请稍后重试"),
+
+    /**
+     * 授权失败(登录信息失效)
+     */
+    AUTHORIZATION_FAILED(1007, "登录信息失效");
 }

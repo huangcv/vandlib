@@ -88,6 +88,10 @@ class LogPrinter private constructor() {
             printResponseLog(builder, getResponseStr(response))
         }
 
+        fun printErrorRequest(builder: LogInterceptor.Builder, request: Request, errorMsg:String){
+            builder.logger.log("Request failed <---> ${request.url.toUrl().toString()} ${request.method} ${LINE_SEPARATOR}Error:$LINE_SEPARATOR  $errorMsg ${LINE_SEPARATOR}End request")
+        }
+
         private fun printResponseLog(builder: LogInterceptor.Builder, responseStr: String) {
             var maxStrLength = 4000
             if (!canPrintPrettyLog(responseStr)){
@@ -109,9 +113,9 @@ class LogPrinter private constructor() {
 
         private fun getResponseStr(response: Response): String {
             return if (!response.promisesBody()) {
-                "End request - Promises Body"
+                "  Promises Body${LINE_SEPARATOR}End request"
             } else if (bodyHasUnknownEncoding(response.headers)) {
-                "encoded body omitted"
+                "  Encoded body omitted${LINE_SEPARATOR}End request"
             } else {
                 getResponseBodyStr(response.headers, response.body)
             }
@@ -135,15 +139,15 @@ class LogPrinter private constructor() {
                 val charset: Charset = contentType?.charset(StandardCharsets.UTF_8)
                     ?: StandardCharsets.UTF_8
                 if (!buffer.isProbablyUtf8()) {
-                    return "End request - binary ${buffer.size}:byte body omitted"
+                    return "  binary ${buffer.size} bytes body omitted${LINE_SEPARATOR}End request"
                 }
                 if (contentLength != 0L) {
                     return getJsonString(buffer.clone().readString(charset)).plus("${LINE_SEPARATOR}End request")
                 }
                 return if (gzippedLength != null) {
-                    "End request - ${buffer.size}:byte, $gzippedLength-gzipped-byte body"
+                    "  ${buffer.size} bytes, $gzippedLength-gzipped-byte body${LINE_SEPARATOR}End request"
                 } else {
-                    "End request - ${buffer.size}:byte body"
+                    "  ${buffer.size} bytes body${LINE_SEPARATOR}End request"
                 }
             } ?: ""
         }

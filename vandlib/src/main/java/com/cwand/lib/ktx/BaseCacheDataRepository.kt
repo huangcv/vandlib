@@ -1,4 +1,4 @@
 package com.cwand.lib.ktx
 
-class BaseCacheDataRepository {
+open class BaseCacheDataRepository {
 }

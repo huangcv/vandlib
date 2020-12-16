@@ -1,9 +1,7 @@
 package com.cwand.lib.ktx.ext
 
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import com.cwand.lib.ktx.exception.ExceptionEngine
+import kotlinx.coroutines.*
 
 /**
  * @author : chunwei
@@ -58,10 +56,7 @@ fun CoroutineScope.safeLauncher(
     onException: (Throwable) -> Unit = {},
 ): Job {
     return launch(CoroutineExceptionHandler { _, throwable ->
-        run {
-            throwable.logV("LauncherException")
-            onException(throwable)
-        }
+        onException(ExceptionEngine.handleException(throwable) ?: throwable)
     }) {
         try {
             block(this)

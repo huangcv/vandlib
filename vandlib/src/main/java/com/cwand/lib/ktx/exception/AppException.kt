@@ -18,7 +18,7 @@ class AppException : Exception {
         this.errorLog = errorLog
     }
 
-    constructor(error: Error, throwable: Throwable?) {
+    constructor(error: Error, throwable: Throwable? = null):super(error.error) {
         this.code = error.code
         this.error = error.error
         this.errorLog = throwable?.message ?: ""
