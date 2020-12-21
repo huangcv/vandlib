@@ -10,6 +10,6 @@ interface ICacheData {
 
     fun isCacheData(cacheKey: String): Boolean
 
-    fun doCacheData(cacheValue: String)
+    fun doCacheData(cacheKey: String, cacheValue: String)
 
 }

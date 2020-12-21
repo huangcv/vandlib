@@ -1,5 +1,6 @@
 package com.cwand.lib.ktx.interceptors.log
 
+import com.cwand.lib.ktx.ext.Level
 import okhttp3.*
 import okhttp3.internal.http.promisesBody
 import okio.Buffer
@@ -34,7 +35,7 @@ class LogPrinter private constructor() {
             chain: Interceptor.Chain,
         ) {
             //为了不让日志被隔开,这里是将所有信息放到一起,一次打印出来
-            val requestLogContainer  =  StringBuilder()
+            val requestLogContainer = StringBuilder()
             //请求地址
             val requestUrl = request.url.toUrl().toString()
             //请求方式
@@ -42,19 +43,24 @@ class LogPrinter private constructor() {
             val protocol = (chain.connection()?.protocol() ?: Protocol.HTTP_1_1).toString()
             val urlStr = "Request ---> $requestUrl $protocol $requestMethod $LINE_SEPARATOR"
             requestLogContainer.append(urlStr)
-            //请求头
-            requestLogContainer.append("Headers:$LINE_SEPARATOR")
             val requestHeaders = request.headers
-            val headerStr = getHeaderStr(requestHeaders)
-            requestLogContainer.append(headerStr)
-            requestLogContainer.append(LINE_SEPARATOR)
+            if (builder.level != LogLevel.BODY) {
+                //请求头
+                requestLogContainer.append("Headers:$LINE_SEPARATOR")
+                val headerStr = getHeaderStr(requestHeaders)
+                requestLogContainer.append(headerStr)
+                requestLogContainer.append(LINE_SEPARATOR)
+            }
+
             //请求体
-            val requestBody = request.body
-            val bodyStr = requestBody?.let {
-                "Body:${getBodyStr(it, requestHeaders)}"
-            } ?: "Body: $LINE_SEPARATOR  null $LINE_SEPARATOR"
-            //打印请求体
-            requestLogContainer.append(bodyStr)
+            if (builder.level == LogLevel.BODY || builder.level == LogLevel.ALL) {
+                val requestBody = request.body
+                val bodyStr = requestBody?.let {
+                    "Body:${getBodyStr(it, requestHeaders)}"
+                } ?: "Body: $LINE_SEPARATOR  null $LINE_SEPARATOR"
+                //打印请求体
+                requestLogContainer.append(bodyStr)
+            }
             builder.logger.log(requestLogContainer.toString())
         }
 
@@ -82,19 +88,25 @@ class LogPrinter private constructor() {
             responseLogContainer.append(codeStr)
             //响应头
             val headerStr = getHeaderStr(response.headers)
-            responseLogContainer.append("Headers: $LINE_SEPARATOR$headerStr")
+            if (builder.level != LogLevel.BODY) {
+                responseLogContainer.append("Headers: $LINE_SEPARATOR$headerStr")
+            }
             builder.logger.log(responseLogContainer.toString())
-            builder.logger.log("Body: $LINE_SEPARATOR")
-            printResponseLog(builder, getResponseStr(response))
+            if (builder.level == LogLevel.BODY || builder.level == LogLevel.ALL) {
+                builder.logger.log("Body: $LINE_SEPARATOR")
+                printResponseLog(builder, getResponseStr(response))
+            }
         }
 
-        fun printErrorRequest(builder: LogInterceptor.Builder, request: Request, errorMsg:String){
-            builder.logger.log("Request failed <---> ${request.url.toUrl().toString()} ${request.method} ${LINE_SEPARATOR}Error:$LINE_SEPARATOR  $errorMsg ${LINE_SEPARATOR}End request")
+        fun printErrorRequest(builder: LogInterceptor.Builder, request: Request, errorMsg: String) {
+            builder.logger.log("Request failed <---> ${
+                request.url.toUrl().toString()
+            } ${request.method} ${LINE_SEPARATOR}Error:$LINE_SEPARATOR  $errorMsg ${LINE_SEPARATOR}End request")
         }
 
         private fun printResponseLog(builder: LogInterceptor.Builder, responseStr: String) {
             var maxStrLength = 4000
-            if (!canPrintPrettyLog(responseStr)){
+            if (!canPrintPrettyLog(responseStr)) {
                 //这为了能够优雅的把超长的日志打印出来,综合把单次打印最大长度定在了1000
                 maxStrLength = 1000
             }
@@ -142,7 +154,8 @@ class LogPrinter private constructor() {
                     return "  binary ${buffer.size} bytes body omitted${LINE_SEPARATOR}End request"
                 }
                 if (contentLength != 0L) {
-                    return getJsonString(buffer.clone().readString(charset)).plus("${LINE_SEPARATOR}End request")
+                    return getJsonString(buffer.clone()
+                        .readString(charset)).plus("${LINE_SEPARATOR}End request")
                 }
                 return if (gzippedLength != null) {
                     "  ${buffer.size} bytes, $gzippedLength-gzipped-byte body${LINE_SEPARATOR}End request"
@@ -179,7 +192,9 @@ class LogPrinter private constructor() {
                         val charset: Charset = contentType?.charset(StandardCharsets.UTF_8)
                             ?: StandardCharsets.UTF_8
                         if (buffer.isProbablyUtf8()) {
-                            "(${body.contentLength()}-bytes) $LINE_SEPARATOR  ${getJsonString(buffer.readString(charset)) + LINE_SEPARATOR}"
+                            "(${body.contentLength()}-bytes) $LINE_SEPARATOR  ${
+                                getJsonString(buffer.readString(charset)) + LINE_SEPARATOR
+                            }"
                         } else {
                             "$LINE_SEPARATOR  binary ${body.contentLength()}-byte body omitted $LINE_SEPARATOR"
                         }

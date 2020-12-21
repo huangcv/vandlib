@@ -1,28 +1,33 @@
 package com.cwand.lib.ktx.utils
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
-import android.nfc.Tag
 import android.os.Build
-import android.text.TextUtils
-import com.cwand.lib.ktx.ext.safeRun
+import android.os.Bundle
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 /**
  * @author : chunwei
  * @date : 2020/12/3
- * @description : 统一管理所有Activity的工具类
+ * @description : 统一管理Activity的工具类
  *
  */
 class ActManager private constructor() {
 
     private val activityStack: Stack<Activity> by lazy { Stack<Activity>() }
     private val aliasStack: Stack<String> by lazy { Stack<String>() }
+    private var isAppInBackground = false
 
     companion object {
 
         private val instance: ActManager = Holder.holder
+
+        @JvmStatic
+        fun registerApplicationCallback(application: Application) {
+            instance.registerApplicationCallbackInner(application)
+        }
 
         /**
          * 添加Activity
@@ -135,20 +140,59 @@ class ActManager private constructor() {
             return instance.finishAllExcludeActivityByAlias(alias)
         }
 
+        /**
+         * 重启指定别名的Activity
+         */
         @JvmStatic
         fun restartActivity(alias: String) {
             instance.restartActivityAlias(alias)
         }
     }
 
+    /**
+     * 注册监听回调
+     */
+    private fun registerApplicationCallbackInner(application: Application) {
+        application.registerActivityLifecycleCallbacks(object :
+            Application.ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+            }
+        })
+    }
+
     private object Holder {
         val holder = ActManager()
     }
 
+    /**
+     * 添加Activity
+     */
     private fun addActivity(activity: Activity) {
         addActivityWithAlias(activity, activity::class.java.simpleName)
     }
 
+    /**
+     * 添加Activity并指定别名
+     */
     @Synchronized
     private fun addActivityWithAlias(activity: Activity, alias: String) {
         var isAddSuccess = false
@@ -170,6 +214,9 @@ class ActManager private constructor() {
         println("添加Activity: $activity , 当前Activity栈详情: $activityStack , $aliasStack")
     }
 
+    /**
+     * 移除指定的Activity且不关闭
+     */
     private fun removeActivity(activity: Activity) {
         val alias = activity::class.java.simpleName
         if (activityStack.remove(activity)) {
@@ -178,6 +225,9 @@ class ActManager private constructor() {
         println("删除Activity $activity , 当前Activity栈详情: $activityStack , $aliasStack")
     }
 
+    /**
+     * 移除指定别名的Activity且不关闭
+     */
     private fun removeActivityByAlias(alias: String) {
         val index = aliasStack.indexOfFirst {
             alias.equals(it, true)
@@ -189,12 +239,18 @@ class ActManager private constructor() {
         println("删除别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
     }
 
+    /**
+     * 移除栈顶Activity且不关闭
+     */
     private fun removeTopActivity() {
         aliasStack.pop()
         activityStack.pop()
         println("移除栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
     }
 
+    /**
+     * 关闭指定别名的Activity
+     */
     private fun finishActivityByAlias(alias: String): Boolean {
         try {
             val index = aliasStack.indexOfFirst {
@@ -211,6 +267,9 @@ class ActManager private constructor() {
         return true
     }
 
+    /**
+     * 关闭栈顶Activity
+     */
     private fun finishTopActivity(): Boolean {
         try {
             aliasStack.pop()
@@ -222,6 +281,9 @@ class ActManager private constructor() {
         return true
     }
 
+    /**
+     * 关闭所有的Activity
+     */
     private fun finishAllActivity() {
         aliasStack.clear()
         activityStack.removeAll {
@@ -231,6 +293,9 @@ class ActManager private constructor() {
         println("关闭所有Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
     }
 
+    /**
+     * 通过别名获取Activity
+     */
     private fun getActivityByAlias(alias: String): Activity? {
         println("获取别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
         try {
@@ -246,16 +311,25 @@ class ActManager private constructor() {
         return null
     }
 
+    /**
+     * 获取栈顶Activity
+     */
     private fun getTopActivity(): Activity {
         println("获取栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
         return activityStack.peek()
     }
 
+    /**
+     * 获取栈底Activity
+     */
     private fun getLastActivity(): Activity {
         println("获取栈底的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
         return activityStack.lastElement()
     }
 
+    /**
+     * 关闭所有的Activity除了指定的Activity
+     */
     private fun finishAllExcludeActivity(activity: Activity): Boolean {
         try {
             activityStack.removeAll {
@@ -273,6 +347,9 @@ class ActManager private constructor() {
         return true
     }
 
+    /**
+     * 关闭所有的Activity除了指定的Activity
+     */
     private fun finishAllExcludeActivity(activity: Activity, alias: String): Boolean {
         try {
             activityStack.removeAll {
@@ -290,6 +367,9 @@ class ActManager private constructor() {
         return true
     }
 
+    /**
+     * 关闭所有的Activity除了指定别名的Activity
+     */
     private fun finishAllExcludeActivityByAlias(alias: String): Boolean {
         try {
             val index = aliasStack.indexOfFirst {
@@ -304,6 +384,9 @@ class ActManager private constructor() {
         return true
     }
 
+    /**
+     * 重启指定别名的Activity
+     */
     private fun restartActivityAlias(alias: String) {
         getActivityByAlias(alias)?.let {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {

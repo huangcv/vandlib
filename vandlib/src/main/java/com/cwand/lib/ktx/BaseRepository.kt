@@ -60,6 +60,6 @@ abstract class BaseRepository : IDataRepository, BaseNetworkApi, ICacheData {
         return false
     }
 
-    override fun doCacheData(cacheValue: String) {
+    override fun doCacheData(cacheKey: String, cacheValue: String) {
     }
 }
