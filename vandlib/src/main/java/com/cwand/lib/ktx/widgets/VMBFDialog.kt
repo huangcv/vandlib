@@ -1,7 +1,7 @@
 package com.cwand.lib.ktx.widgets
 
 import android.os.Bundle
-import com.cwand.lib.ktx.BaseViewModel
+import com.cwand.lib.ktx.viewmodel.BaseViewModel
 
 /**
  * @author : chunwei

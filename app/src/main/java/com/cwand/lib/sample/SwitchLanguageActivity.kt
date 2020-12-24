@@ -3,7 +3,7 @@ package com.cwand.lib.sample
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.cwand.lib.ktx.BaseTitleActivity
+import com.cwand.lib.ktx.ui.BaseTitleActivity
 import com.cwand.lib.ktx.ext.delayRun
 import com.cwand.lib.ktx.ext.onClick
 import com.cwand.lib.ktx.utils.ActManager

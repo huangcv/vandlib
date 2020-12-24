@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.livedata
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData

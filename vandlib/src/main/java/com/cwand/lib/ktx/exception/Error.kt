@@ -35,5 +35,11 @@ enum class Error(val code: Int, val error: String) {
     /**
      * 授权失败(登录信息失效)
      */
-    AUTHORIZATION_FAILED(1007, "登录信息失效");
+    AUTHORIZATION_FAILED(1007, "登录信息失效"),
+
+    /**
+     * 其他异常
+     */
+    OTHER(1314520, "");
+
 }

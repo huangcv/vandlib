@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.utils
 
 /**
  * @author : chunwei
@@ -8,4 +8,5 @@ package com.cwand.lib.ktx
  */
 interface CreatorFactory<T> {
     fun create(): T
+    fun create(data: Any): T
 }

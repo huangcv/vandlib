@@ -10,11 +10,11 @@ import okhttp3.HttpUrl
  *
  */
 interface CookieStore {
-    fun add(url: HttpUrl, cookies: List<Cookie?>)
+    fun add(url: HttpUrl, cookies: List<Cookie>)
 
-    operator fun get(url: HttpUrl): List<Cookie?>
+    operator fun get(url: HttpUrl): List<Cookie>
 
-    fun getCookies(): List<Cookie?>
+    fun getCookies(): List<Cookie>
 
     fun remove(url: HttpUrl, cookie: Cookie): Boolean
 

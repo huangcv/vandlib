@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.utils
 
 import android.content.Context
 import android.widget.Toast

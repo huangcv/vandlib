@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.repository
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -11,9 +11,11 @@ import retrofit2.Retrofit
  */
 interface BaseNetworkApi {
 
-    fun <T> getApi(apiClass: Class<T>, baseUrl: String): T
+    fun <T> getApi(apiClass: Class<T>, baseUrl: String = ""): T
+
+    fun <T> getApi(apiClass: Class<T>): T
 
     fun getOkHttpClient(): OkHttpClient
 
-    fun getRetrofit(): Retrofit
+    fun getRetrofit(baseUrl: String = ""): Retrofit
 }

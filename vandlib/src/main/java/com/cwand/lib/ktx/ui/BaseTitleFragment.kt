@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -22,12 +22,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import com.cwand.lib.ktx.R
 import com.cwand.lib.ktx.entity.MenuEntity
 
 /**
  * 带标题栏的fragment
  */
-open abstract class BaseTitleFragment : AbsFragment() {
+open abstract class BaseTitleFragment : BaseFragment() {
 
     private val menuList: MutableList<MenuEntity> by lazy { mutableListOf<MenuEntity>() }
 

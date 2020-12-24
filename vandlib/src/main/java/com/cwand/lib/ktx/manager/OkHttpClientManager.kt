@@ -1,7 +1,9 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.manager
 
+import com.cwand.lib.ktx.utils.CreatorFactory
 import com.cwand.lib.ktx.interceptors.CacheInterceptor
 import com.cwand.lib.ktx.interceptors.log.LogInterceptor
+import com.cwand.lib.ktx.repository.RepositoryConfig
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -40,6 +42,10 @@ class OkHttpClientManager private constructor() {
     companion object {
         private val instance: OkHttpClientManager = Holder.holder
 
+        fun getOkClientCreatorFactory(): CreatorFactory<OkHttpClient> {
+            return instance.customOkHttpClientFactory ?: instance.okHttpClientFactory
+        }
+
         fun getOkClient(): OkHttpClient {
             if (instance.okHttpClient == null) {
                 instance.okHttpClient = createNew()
@@ -51,12 +57,10 @@ class OkHttpClientManager private constructor() {
             return instance.okHttpClientBuilder
         }
 
-        fun newOkHttpClient(): OkHttpClient {
-            return newOkHttpClient(instance.customOkHttpClientFactory
-                ?: instance.okHttpClientFactory)
-        }
-
-        fun newOkHttpClient(factory: CreatorFactory<OkHttpClient>): OkHttpClient {
+        fun newOkHttpClient(
+            factory: CreatorFactory<OkHttpClient> = instance.customOkHttpClientFactory
+                ?: instance.okHttpClientFactory,
+        ): OkHttpClient {
             return factory.create()
         }
 
@@ -68,6 +72,10 @@ class OkHttpClientManager private constructor() {
 
     internal class DefaultOkHttpClientFactory : CreatorFactory<OkHttpClient> {
         override fun create(): OkHttpClient {
+            return create(Any())
+        }
+
+        override fun create(data: Any): OkHttpClient {
             return instance.defaultOkHttpClientBuilder()
                 .build()
         }

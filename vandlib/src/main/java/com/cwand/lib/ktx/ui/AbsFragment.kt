@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.ui
 
 import android.app.Dialog
 import android.content.Context
@@ -15,7 +15,11 @@ import androidx.annotation.IntDef
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.cwand.lib.ktx.livedata.OnEventAction
+import com.cwand.lib.ktx.utils.ToastUtils
+import com.cwand.lib.ktx.widgets.LoadingDialog
 
 abstract class AbsFragment : Fragment(), OnEventAction {
 
@@ -61,8 +65,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
     @IntDef(Toast.LENGTH_SHORT, Toast.LENGTH_LONG)
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     internal annotation class Duration
-
-    val loadingDialog: Dialog by lazy { initLoading() ?: Dialog(requireContext()) }
+    private var loadingDialog: DialogFragment? = null
 
     private var viewInit = false
     private var firstInit = true
@@ -74,27 +77,48 @@ abstract class AbsFragment : Fragment(), OnEventAction {
     abstract fun initListeners()
     abstract fun lazyInit()
 
-    open fun initLoading(): Dialog? {
-        return null
+    open fun initLoading(title: String?, cancelable: Boolean = true): DialogFragment {
+        return LoadingDialog.get(cancelable, title)
     }
+
 
     protected fun showLoading() {
         showLoading(null)
     }
 
     protected fun showLoading(tip: String?) {
-        showLoading(null, canCancel = false)
+        showLoading(tip, canCancel = true)
     }
 
-    protected fun showLoading(tip: String?, canCancel: Boolean = false) {
-        if (!loadingDialog.isShowing) {
-            loadingDialog.setCancelable(canCancel)
-            loadingDialog.show()
+    protected fun showLoading(tip: String?, canCancel: Boolean = true) {
+        if (loadingDialog == null) {
+            loadingDialog = initLoading(tip, canCancel)
+        }
+        loadingDialog?.let { df ->
+            df.isCancelable = canCancel
+            val dialog = df.dialog
+            if (dialog == null || (!dialog.isShowing)) {
+                if (loadingDialog is LoadingDialog) {
+                    val ld = loadingDialog as LoadingDialog
+                    tip?.let {
+                        ld.updateTitle(it)
+                    }
+                    ld.showLoading(childFragmentManager)
+                } else {
+                    df.show(childFragmentManager, "LoadingDialog")
+                }
+            }
         }
     }
 
     protected fun hideLoading() {
-        loadingDialog.dismiss()
+        loadingDialog?.let { df ->
+            if (df is LoadingDialog) {
+                df.hideLoading()
+            } else {
+                df.dismiss()
+            }
+        }
     }
 
     protected fun toast(tip: String) {

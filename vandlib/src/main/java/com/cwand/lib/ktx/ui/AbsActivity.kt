@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.ui
 
 import android.content.Context
 import android.content.Intent
@@ -15,8 +15,9 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
+import com.cwand.lib.ktx.livedata.OnEventAction
+import com.cwand.lib.ktx.utils.ToastUtils
 import com.cwand.lib.ktx.utils.ActManager
 import com.cwand.lib.ktx.utils.LanguageUtils
 import com.cwand.lib.ktx.widgets.LoadingDialog
@@ -145,7 +146,6 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
-
     }
 
     private fun configStatusBarColor() {
@@ -167,10 +167,10 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     }
 
     protected fun showLoading(tip: String?) {
-        showLoading(null, canCancel = true)
+        showLoading(tip, canCancel = true)
     }
 
-    protected fun showLoading(tip: String?, canCancel: Boolean = false) {
+    protected fun showLoading(tip: String?, canCancel: Boolean = true) {
         if (loadingDialog == null) {
             loadingDialog = initLoading(tip, canCancel)
         }

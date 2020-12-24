@@ -13,23 +13,19 @@ import java.util.*
  */
 class MemoryCookieStore : CookieStore {
 
-    private val allCookies = HashMap<String, MutableList<Cookie?>>()
+    private val allCookies = HashMap<String, MutableList<Cookie>>()
 
-    override fun add(url: HttpUrl, cookies: List<Cookie?>) {
+    override fun add(url: HttpUrl, cookies: List<Cookie>) {
         val oldCookies = allCookies[url.host]
         oldCookies.notNull({
             val newIteration = cookies.iterator()
             val oldIteration = it.iterator()
             while (newIteration.hasNext()) {
-                val newName = newIteration.next()?.name
-                newName?.let { nn ->
-                    while (oldIteration.hasNext()) {
-                        val oldName = oldIteration.next()?.name
-                        oldName?.let { on ->
-                            if (nn == on) {
-                                oldIteration.remove()
-                            }
-                        }
+                val newName = newIteration.next().name
+                while (oldIteration.hasNext()) {
+                    val oldName = oldIteration.next().name
+                    if (newName == oldName) {
+                        oldIteration.remove()
                     }
                 }
             }
@@ -39,7 +35,7 @@ class MemoryCookieStore : CookieStore {
         })
     }
 
-    override fun get(url: HttpUrl): List<Cookie?> {
+    override fun get(url: HttpUrl): List<Cookie> {
         var mutableList = allCookies[url.host]
         if (mutableList == null) {
             mutableList = mutableListOf()
@@ -48,8 +44,8 @@ class MemoryCookieStore : CookieStore {
         return mutableList
     }
 
-    override fun getCookies(): List<Cookie?> {
-        val cookies: MutableList<Cookie?> = mutableListOf()
+    override fun getCookies(): List<Cookie> {
+        val cookies: MutableList<Cookie> = mutableListOf()
         val httpUrls: MutableSet<String> = allCookies.keys
         for (httpUrl in httpUrls) {
             val elements = allCookies[httpUrl]

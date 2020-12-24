@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import com.cwand.lib.ktx.ext.logD
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -211,7 +212,7 @@ class ActManager private constructor() {
                 aliasStack.remove(alias)
             }
         }
-        println("添加Activity: $activity , 当前Activity栈详情: $activityStack , $aliasStack")
+        "添加Activity: $activity , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
     }
 
     /**
@@ -222,7 +223,7 @@ class ActManager private constructor() {
         if (activityStack.remove(activity)) {
             aliasStack.remove(alias)
         }
-        println("删除Activity $activity , 当前Activity栈详情: $activityStack , $aliasStack")
+        "删除Activity $activity , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
     }
 
     /**
@@ -236,7 +237,7 @@ class ActManager private constructor() {
             aliasStack.removeElementAt(index)
             activityStack.removeElementAt(index)
         }
-        println("删除别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+        "删除别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
     }
 
     /**
@@ -245,7 +246,7 @@ class ActManager private constructor() {
     private fun removeTopActivity() {
         aliasStack.pop()
         activityStack.pop()
-        println("移除栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+        "移除栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
     }
 
     /**
@@ -260,7 +261,7 @@ class ActManager private constructor() {
                 aliasStack.removeElementAt(index)
                 activityStack.removeAt(index).finish()
             }
-            println("关闭别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+            "关闭别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         } catch (e: Exception) {
             return false
         }
@@ -274,7 +275,7 @@ class ActManager private constructor() {
         try {
             aliasStack.pop()
             activityStack.pop().finish()
-            println("关闭栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+            "关闭栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         } catch (e: Exception) {
             return false
         }
@@ -290,14 +291,14 @@ class ActManager private constructor() {
             it.finish()
             true
         }
-        println("关闭所有Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+        "关闭所有Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
     }
 
     /**
      * 通过别名获取Activity
      */
     private fun getActivityByAlias(alias: String): Activity? {
-        println("获取别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+        "获取别名: $alias 的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         try {
             val index = aliasStack.indexOfFirst {
                 alias.equals(it, true)
@@ -315,7 +316,7 @@ class ActManager private constructor() {
      * 获取栈顶Activity
      */
     private fun getTopActivity(): Activity {
-        println("获取栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+        "获取栈顶的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         return activityStack.peek()
     }
 
@@ -323,7 +324,7 @@ class ActManager private constructor() {
      * 获取栈底Activity
      */
     private fun getLastActivity(): Activity {
-        println("获取栈底的Activity  , 当前Activity栈详情: $activityStack , $aliasStack")
+        "获取栈底的Activity  , 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         return activityStack.lastElement()
     }
 
@@ -340,7 +341,7 @@ class ActManager private constructor() {
             activityStack.clear()
             aliasStack.clear()
             addActivity(activity)
-            println("移除所有的Activity ,除了 $activity . 当前Activity栈详情: $activityStack , $aliasStack")
+            "移除所有的Activity ,除了 $activity . 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         } catch (e: Exception) {
             return false
         }
@@ -360,7 +361,7 @@ class ActManager private constructor() {
             activityStack.clear()
             aliasStack.clear()
             addActivityWithAlias(activity, alias)
-            println("移除所有的Activity ,除了别名: $alias 的Activity. 当前Activity栈详情: $activityStack , $aliasStack")
+            "移除所有的Activity ,除了别名: $alias 的Activity. 当前Activity栈详情: $activityStack , $aliasStack".logD("ActManager")
         } catch (e: Exception) {
             return false
         }

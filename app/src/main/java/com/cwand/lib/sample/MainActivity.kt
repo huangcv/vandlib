@@ -1,26 +1,16 @@
 package com.cwand.lib.sample
 
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import com.cwand.lib.ktx.*
 import com.cwand.lib.ktx.entity.MenuEntity
-import com.cwand.lib.ktx.ext.launcher
 import com.cwand.lib.ktx.ext.logD
-import com.cwand.lib.ktx.interceptors.log.LogInterceptor
-import com.cwand.lib.ktx.utils.LanguageType
+import com.cwand.lib.ktx.ui.BaseVMActivity
 import com.cwand.lib.ktx.utils.NetworkUtils
+import com.cwand.lib.ktx.viewmodel.getViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : BaseVMActivity<TestViewModel>() {
 

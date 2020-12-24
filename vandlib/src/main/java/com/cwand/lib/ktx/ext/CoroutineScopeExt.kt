@@ -1,5 +1,8 @@
 package com.cwand.lib.ktx.ext
 
+import com.cwand.lib.ktx.BuildConfig
+import com.cwand.lib.ktx.exception.AppException
+import com.cwand.lib.ktx.exception.Error
 import com.cwand.lib.ktx.exception.ExceptionEngine
 import kotlinx.coroutines.*
 
@@ -14,58 +17,131 @@ import kotlinx.coroutines.*
  * 封装统一的发射器,结果和异常可以做统一处理
  */
 open class Launcher(
+    private val launcherCallback: LauncherCallback,
     //协程域
     private val coroutineScope: CoroutineScope,
     //需要执行的代码块
     private val block: suspend CoroutineScope.() -> Unit,
 ) {
 
-    private var exceptionFun: (Throwable) -> Unit = {}
-    private var finallyFun: () -> Unit = {}
+    private var exceptionFun: (AppException) -> Unit = {}
+    private var completedFun: () -> Unit = {}
+    private var successFun: () -> Unit = {}
+    private var startFun: () -> Unit = {}
+
+    private val defaultLauncherCallback: LauncherCallback = object : LauncherCallback {
+        override fun onStart() {
+            launcherCallback.onStart()
+            startFun()
+        }
+
+        override fun onException(exception: AppException) {
+            launcherCallback.onException(exception)
+            exceptionFun(exception)
+        }
+
+        override fun onSuccess() {
+            launcherCallback.onSuccess()
+            successFun()
+        }
+
+        override fun onCompleted() {
+            launcherCallback.onCompleted()
+            completedFun()
+        }
+
+    }
+
+    fun onStart(sf: () -> Unit = {}) = apply {
+        startFun = sf
+    }
 
     /**
      * 出现异常执行
      */
-    fun onException(ef: (Throwable) -> Unit = {}): Launcher {
+    fun onException(ef: (AppException) -> Unit = {}) = apply {
         exceptionFun = ef
-        return this
+    }
+
+    /**
+     * block 正常执行完之后回调
+     */
+    fun onSuccess(sf: () -> Unit = {}) = apply {
+        successFun = sf
     }
 
     /**
      *  一定会执行
      */
-    fun onFinally(ff: () -> Unit = {}): Launcher {
-        finallyFun = ff
-        return this
+    fun onCompleted(ff: () -> Unit = {}) = apply {
+        completedFun = ff
     }
 
     /**
      * 启动协程
      */
     fun start(): Job {
-        return coroutineScope.safeLauncher(block, finallyFun, exceptionFun)
+        return coroutineScope.safeLauncher(
+            defaultLauncherCallback,
+            block)
     }
 }
 
+interface LauncherCallback {
+
+    fun onStart()
+
+    /**
+     * 出现异常执行
+     */
+    fun onException(exception: AppException)
+
+    /**
+     * block 正常执行完之后回调
+     */
+    fun onSuccess()
+
+    /**
+     *  一定会执行
+     */
+    fun onCompleted()
+}
+
 /**
- * 统一处理异常
+ * 统一处理回调
  */
 fun CoroutineScope.safeLauncher(
+    launcherCallback: LauncherCallback,
     block: suspend CoroutineScope.() -> Unit,
-    onFinally: () -> Unit = {},
-    onException: (Throwable) -> Unit = {},
 ): Job {
-    return launch(CoroutineExceptionHandler { _, throwable ->
-        onException(ExceptionEngine.handleException(throwable) ?: throwable)
-    }) {
+    return launch {
         try {
-            block(this)
+            kotlin.runCatching {
+                withContext(Dispatchers.Main) {
+                    launcherCallback.onStart()
+                }
+                block(this)
+            }.onSuccess {
+                launcherCallback.onSuccess()
+            }.onFailure {
+                if (!ExceptionEngine.handleException(it)) {
+                    if (it is AppException) {
+                        launcherCallback.onException(it)
+                    } else {
+                        launcherCallback.onException(AppException(Error.OTHER.code,
+                            Error.OTHER.error.plus(it.message)))
+                    }
+                }
+            }
         } finally {
-            onFinally()
+            launcherCallback.onCompleted()
         }
     }
 }
 
-fun CoroutineScope.launcher(block: suspend CoroutineScope.() -> Unit): Launcher {
-    return Launcher(this, block)
+fun CoroutineScope.launcher(
+    launcherCallback: LauncherCallback,
+    block: suspend CoroutineScope.() -> Unit,
+): Launcher {
+    return Launcher(launcherCallback, this, block)
 }

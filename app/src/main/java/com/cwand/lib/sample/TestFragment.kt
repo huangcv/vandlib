@@ -3,10 +3,7 @@ package com.cwand.lib.sample
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.cwand.lib.ktx.AbsFragment
-import com.cwand.lib.ktx.BaseTitleFragment
-import com.cwand.lib.ktx.entity.MenuEntity
-import com.cwand.lib.ktx.ext.delayRun
+import com.cwand.lib.ktx.ui.BaseTitleFragment
 import com.cwand.lib.ktx.ext.onClick
 import kotlinx.android.synthetic.main.fragment_test.*
 

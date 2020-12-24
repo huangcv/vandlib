@@ -45,16 +45,25 @@ class LanguageUtils {
         const val LANGUAGE_SP_KEY = "AppLocalLanguage"
         const val TAG = "LanguageUtils"
 
+        /**
+         * 语言是否相同
+         */
         fun isSameLanguage(context: Context, newLanguage: String): Boolean {
             return getLanguage(context).equals(newLanguage, true)
         }
 
+        /**
+         * 保存语言
+         */
         @JvmStatic
         fun saveLanguage(context: Context, key: String, value: String): Boolean {
             //保存切换的语言
             return context.putAppSpValue(key, value)
         }
 
+        /**
+         * 获取当前语言类型
+         */
         @JvmStatic
         fun getLanguage(context: Context): String {
             var appSpValue = context.getAppSpValue(LANGUAGE_SP_KEY)
@@ -64,6 +73,9 @@ class LanguageUtils {
             return appSpValue
         }
 
+        /**
+         * 应用更改的语言
+         */
         @JvmStatic
         fun changeAppLanguage(context: Context, newLanguage: String) {
             if (TextUtils.isEmpty(newLanguage)) {
@@ -81,6 +93,9 @@ class LanguageUtils {
             resources.updateConfiguration(configuration, resources.displayMetrics)
         }
 
+        /**
+         * 通过语言类型获取本地对象
+         */
         @JvmStatic
         private fun getLocaleByLanguage(language: String): Locale {
             return when (language) {
@@ -111,11 +126,17 @@ class LanguageUtils {
             }
         }
 
+        /**
+         * 包装Context
+         */
         @JvmStatic
         fun attachBaseContext(context: Context, language: String = getLanguage(context)): Context {
             return updateResources(context, language)
         }
 
+        /**
+         * 更新资源
+         */
         @TargetApi(Build.VERSION_CODES.N)
         private fun updateResources(context: Context, language: String): Context {
             val resources = context.resources

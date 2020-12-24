@@ -46,8 +46,8 @@ open class LoadingDialog : DialogFragment() {
         val dialog: Dialog = super.onCreateDialog(savedInstanceState)
         //获取初始化数据
         if (arguments != null) {
-            dialogCanCancel = arguments!!.getBoolean(KEY_CANCELABLE, false)
-            tip = arguments!!.getString(KEY_MSG, "")
+            dialogCanCancel = arguments?.getBoolean(KEY_CANCELABLE, false) ?: false
+            tip = arguments?.getString(KEY_MSG, "")
         }
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(dialogCanCancel)

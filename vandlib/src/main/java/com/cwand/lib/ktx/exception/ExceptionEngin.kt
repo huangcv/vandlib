@@ -20,8 +20,8 @@ class ExceptionEngine private constructor() {
         }
 
         @MainThread
-        fun handleException(exception: Throwable): AppException? {
-            return instance.exceptionHandler?.handleException(exception)
+        fun handleException(exception: Throwable): Boolean {
+            return instance.exceptionHandler?.handleException(exception) ?: false
         }
 
     }
@@ -31,7 +31,8 @@ class ExceptionEngine private constructor() {
     }
 
     interface ExceptionHandler {
-        fun handleException(exception: Throwable): AppException?
+        //对错误进行统一处理
+        fun handleException(exception: Throwable): Boolean
     }
 
 }

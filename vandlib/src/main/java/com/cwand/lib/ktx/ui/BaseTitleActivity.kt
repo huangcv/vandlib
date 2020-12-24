@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx
+package com.cwand.lib.ktx.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -25,6 +25,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import com.cwand.lib.ktx.R
 import com.cwand.lib.ktx.entity.MenuEntity
 import kotlinx.android.synthetic.main.and_lib_base_title_activity.*
 
