@@ -1,10 +1,11 @@
 package com.cwand.lib.ktx.ui
 
-import android.app.Dialog
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,25 +18,54 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.cwand.lib.ktx.R
 import com.cwand.lib.ktx.livedata.OnEventAction
 import com.cwand.lib.ktx.utils.ToastUtils
 import com.cwand.lib.ktx.widgets.LoadingDialog
 
 abstract class AbsFragment : Fragment(), OnEventAction {
 
+    //默认主题状态栏颜色
+    @ColorInt
+    protected var themeStatusBarBgColor = Color.WHITE
+
+    //默认主题工具栏颜色
+    @ColorInt
+    protected var themeToolbarBgColor = Color.WHITE
+
+    //默认主题导航栏颜色
+    @ColorInt
+    protected var themeNavigationBarBgColor = Color.WHITE
+
     //状态栏背景颜色,默认灰色
     @ColorInt
-    var statusBarBgColor: Int = Color.parseColor("#FF292D38")
+    var statusBarBgColor: Int = Color.WHITE
         set(value) {
             if (value != field) {
                 field = value
-                configStatusBarColor()
+                configStatusBarColor(value)
             }
         }
 
-    private fun configStatusBarColor() {
+    //底部导航栏背景颜色,默认灰色
+    @ColorInt
+    var navigationBarBgColor: Int = Color.WHITE
+        set(value) {
+            if (value != field) {
+                field = value
+                configNavigationBarColor(value)
+            }
+        }
+
+    private fun configStatusBarColor(color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            requireActivity().window.statusBarColor = statusBarBgColor
+            activity?.window?.statusBarColor = color
+        }
+    }
+
+    private fun configNavigationBarColor(color: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity?.window?.navigationBarColor = color
         }
     }
 
@@ -65,6 +95,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
     @IntDef(Toast.LENGTH_SHORT, Toast.LENGTH_LONG)
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     internal annotation class Duration
+
     private var loadingDialog: DialogFragment? = null
 
     private var viewInit = false
@@ -81,6 +112,29 @@ abstract class AbsFragment : Fragment(), OnEventAction {
         return LoadingDialog.get(cancelable, title)
     }
 
+    private fun initThemeValue() {
+        val typedValue = TypedValue()
+        themeStatusBarBgColor = if (theme.resolveAttribute(R.attr.statusBarBgColor,
+                typedValue,
+                true)
+        ) typedValue.data else Color.WHITE
+        themeToolbarBgColor = if (theme.resolveAttribute(R.attr.toolbarBgColor,
+                typedValue,
+                true)
+        ) typedValue.data else Color.WHITE
+        themeNavigationBarBgColor = if (theme.resolveAttribute(R.attr.navigationBarBgColor,
+                typedValue,
+                true)
+        ) typedValue.data else Color.WHITE
+        checkThemeColor()
+    }
+
+    /**
+     * 校验主题颜色,这里可以统一处理主题颜色
+     */
+    open fun checkThemeColor() {
+
+    }
 
     protected fun showLoading() {
         showLoading(null)
@@ -135,6 +189,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initThemeValue()
         if (savedInstanceState != null) {
             try {
                 val isHidden =
@@ -273,3 +328,6 @@ abstract class AbsFragment : Fragment(), OnEventAction {
     }
 
 }
+
+val Fragment.theme: Resources.Theme
+    get() = requireActivity().theme

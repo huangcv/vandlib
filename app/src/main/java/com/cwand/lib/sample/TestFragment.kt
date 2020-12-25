@@ -1,11 +1,20 @@
 package com.cwand.lib.sample
 
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
-import com.cwand.lib.ktx.ui.BaseTitleFragment
 import com.cwand.lib.ktx.ext.onClick
+import com.cwand.lib.ktx.ui.BaseTitleFragment
+import com.cwand.lib.ktx.utils.BlurUtils
 import kotlinx.android.synthetic.main.fragment_test.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TestFragment : BaseTitleFragment() {
 
@@ -40,10 +49,9 @@ class TestFragment : BaseTitleFragment() {
         }
     }
 
-    override fun onMenuClicked(index: Int, title: CharSequence) {
+    override fun onMenuClicked(menu: MenuItem, menuId: Int, title: CharSequence) {
         startActivity(Intent(requireContext(), Test3::class.java))
     }
-
     override fun initListeners() {
     }
 

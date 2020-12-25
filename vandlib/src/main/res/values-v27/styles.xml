@@ -2,17 +2,12 @@
 <resources>
 
     <!--启动页的主题-->
-    <style name="VandLauncherActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
+    <style name="VandLauncherActivityTheme" parent="VandBaseAppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFullscreen">true</item>
         <!-- Android P 异性屏适配 可以达到全面屏的效果 -->
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowBackground">@null</item>
-        <item name="android:navigationBarColor">@color/colorNavigationBarVand</item>
-        <item name="colorPrimary">@color/colorPrimaryVand</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
-        <item name="colorAccent">@color/colorAccentVand</item>
-        <item name="textAllCaps">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>

@@ -24,4 +24,16 @@ object ToastUtils {
     fun toast(context: Context, @StringRes messageRes: Int) {
         Toast.makeText(context, messageRes, Toast.LENGTH_SHORT).show()
     }
+
+    @JvmStatic
+    @MainThread
+    fun toastLong(context: Context, message: CharSequence) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    @JvmStatic
+    @MainThread
+    fun toastLong(context: Context, @StringRes messageRes: Int) {
+        Toast.makeText(context, messageRes, Toast.LENGTH_SHORT).show()
+    }
 }

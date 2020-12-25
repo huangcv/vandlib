@@ -45,6 +45,15 @@ open abstract class BaseTitleFragment : BaseFragment() {
     var defMenuTitleColor = Color.WHITE
     var defMenuTitleSize = 14
 
+    @ColorInt
+    var toolbarBgColor: Int = Color.WHITE
+        set(value) {
+            if (value != field) {
+                field = value
+                updateToolbarBgColor(value)
+            }
+        }
+
     protected var contentView: View? = null
 
     private var toolbarIsInit = false
@@ -128,6 +137,10 @@ open abstract class BaseTitleFragment : BaseFragment() {
             initViews(arguments, it)
         }
         initListeners()
+    }
+
+    private fun updateToolbarBgColor(color: Int) {
+        mToolbar?.setBackgroundColor(color)
     }
 
     /**
@@ -224,13 +237,13 @@ open abstract class BaseTitleFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.and_lib_base_menu_f_single1 -> {
-                onMenuClicked(item.itemId, menuList[0].title)
+                onMenuClicked(item, menuList[0].menuId, menuList[0].title)
             }
             R.id.and_lib_base_menu_f_single2 -> {
-                onMenuClicked(item.itemId, menuList[1].title)
+                onMenuClicked(item, menuList[1].menuId, menuList[1].title)
             }
             R.id.and_lib_base_menu_f_single3 -> {
-                onMenuClicked(item.itemId, menuList[2].title)
+                onMenuClicked(item, menuList[2].menuId, menuList[2].title)
             }
             else -> {
             }
@@ -306,7 +319,7 @@ open abstract class BaseTitleFragment : BaseFragment() {
         }
     }
 
-    protected open fun onMenuClicked(id: Int, title: CharSequence) {
+    protected open fun onMenuClicked(menu: MenuItem, menuId: Int, title: CharSequence) {
 
     }
 
@@ -318,13 +331,9 @@ open abstract class BaseTitleFragment : BaseFragment() {
     /**
      * 配置标题栏
      */
-    open fun configToolbar(toolsBar: Toolbar) {
-        //设置主题色
-        //app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        //    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        //标题栏背景色,默认跟随状态栏颜色
-        //标题栏颜色
-        toolsBar.setBackgroundColor(statusBarBgColor)
+    open fun configToolbar(toolsBar: Toolbar, color: Int = themeToolbarBgColor) {
+        //标题栏背景色,默认主题颜色
+        updateToolbarBgColor(color)
         //设置标题
         mTitleView?.let {
             configTitle(it)

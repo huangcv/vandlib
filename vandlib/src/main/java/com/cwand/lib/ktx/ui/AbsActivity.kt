@@ -1,10 +1,13 @@
 package com.cwand.lib.ktx.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -16,16 +19,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import com.cwand.lib.ktx.R
+import com.cwand.lib.ktx.ext.logD
 import com.cwand.lib.ktx.livedata.OnEventAction
-import com.cwand.lib.ktx.utils.ToastUtils
 import com.cwand.lib.ktx.utils.ActManager
 import com.cwand.lib.ktx.utils.LanguageUtils
+import com.cwand.lib.ktx.utils.ToastUtils
 import com.cwand.lib.ktx.widgets.LoadingDialog
 
 
 abstract class AbsActivity : AppCompatActivity(), OnEventAction {
 
-    var multiLanguageSupport = false
+    open fun multiLanguageSupport() = false
 
     private var currentFragment: Fragment? = null
 
@@ -44,16 +49,36 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
             }
         }
 
+    val innerLoadingView: View by lazy {
+        LayoutInflater.from(this).inflate(R.layout.and_lib_base_loading_view, null)
+    }
+
+    @ColorInt
+    protected var themeStatusBarBgColor = Color.WHITE
+    @ColorInt
+    protected var themeToolbarBgColor = Color.WHITE
+    @ColorInt
+    protected var themeNavigationBarBgColor = Color.WHITE
+
     //状态栏背景颜色,默认灰色
     @ColorInt
-    var statusBarBgColor: Int = Color.parseColor("#FF292D38")
+    var statusBarBgColor: Int = Color.WHITE
         set(value) {
             if (value != field) {
                 field = value
-                configStatusBarColor()
+                configStatusBarColor(value)
             }
         }
 
+    //底部导航栏背景颜色,默认灰色
+    @ColorInt
+    var navigationBarBgColor: Int = Color.WHITE
+        set(value) {
+            if (value != field) {
+                field = value
+                configNavigationBarColor(value)
+            }
+        }
     //状态栏字体颜色是否为亮色(即颜色为暗色),默认false
     var statusBarLightMode: Boolean = false
         set(value) {
@@ -148,9 +173,15 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
         }
     }
 
-    private fun configStatusBarColor() {
+    private fun configStatusBarColor(color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = statusBarBgColor
+            window.statusBarColor = color
+        }
+    }
+
+    private fun configNavigationBarColor(color: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.navigationBarColor = color
         }
     }
 
@@ -206,16 +237,43 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     }
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(if (multiLanguageSupport) LanguageUtils.attachBaseContext(newBase) else newBase)
+        super.attachBaseContext(if (multiLanguageSupport()) LanguageUtils.attachBaseContext(newBase) else newBase)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initThemeValue()
         super.onCreate(savedInstanceState)
         addActivityToStack()
         handleBundle(savedInstanceState)
         initStatus = START
         initStatusBar()
         innerInit(savedInstanceState)
+    }
+
+    @SuppressLint("ResourceType")
+    private fun initThemeValue() {
+        val typedValue = TypedValue()
+        themeStatusBarBgColor = if (theme.resolveAttribute(R.attr.statusBarBgColor,
+                typedValue,
+                true)
+        ) typedValue.data else Color.WHITE
+        themeToolbarBgColor = if (theme.resolveAttribute(R.attr.toolbarBgColor,
+                typedValue,
+                true)
+        ) typedValue.data else Color.WHITE
+        themeNavigationBarBgColor = if (theme.resolveAttribute(R.attr.navigationBarBgColor,
+                typedValue,
+                true)
+        ) typedValue.data else Color.WHITE
+        checkThemeColor()
+    }
+
+
+    /**
+     * 校验主题颜色,这里可以统一处理主题颜色
+     */
+    open fun checkThemeColor() {
+
     }
 
     protected open fun addActivityToStack() {
@@ -231,7 +289,8 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
             fullScreen()
             return
         }
-        configStatusBarColor()
+        configStatusBarColor(themeStatusBarBgColor)
+        configNavigationBarColor(themeNavigationBarBgColor)
         configStatusBar()
     }
 
@@ -266,7 +325,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     }
 
     protected fun putFragment(fragment: Fragment, @IdRes contentId: Int) {
-        putFragment(fragment, contentId, true)
+        putFragment(fragment, contentId, false)
     }
 
     protected fun putFragment(fragment: Fragment, @IdRes contentId: Int, cleanView: Boolean) {
@@ -397,7 +456,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
      *
      */
     protected fun changeLanguage(language: String, restart: () -> Unit = {}) {
-        if (!multiLanguageSupport) {
+        if (!multiLanguageSupport()) {
             return
         }
         if (!LanguageUtils.isSameLanguage(this, language)) {

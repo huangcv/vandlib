@@ -29,11 +29,14 @@ import com.cwand.lib.ktx.R
 import com.cwand.lib.ktx.entity.MenuEntity
 import kotlinx.android.synthetic.main.and_lib_base_title_activity.*
 
-abstract class BaseTitleActivity : AbsActivity() {
+abstract class BaseTitleActivity : BaseActivity() {
 
     private var toolbarIsInit = false
 
     var mToolbar: Toolbar? = null
+        private set
+
+    var rootView: View? = null
         private set
 
     private var mTitleView: TextView? = null
@@ -52,6 +55,16 @@ abstract class BaseTitleActivity : AbsActivity() {
     @ColorInt
     var defMenuTitleColor = Color.WHITE
     var defMenuTitleSize = 14
+
+    @ColorInt
+    var toolbarBgColor: Int = Color.WHITE
+        set(value) {
+            if (value != field) {
+                field = value
+                themeToolbarBgColor = value
+                updateToolbarBgColor(value)
+            }
+        }
 
 
     @DrawableRes
@@ -112,6 +125,7 @@ abstract class BaseTitleActivity : AbsActivity() {
     override fun innerInit(savedInstanceState: Bundle?) {
         if (!skipBaseToolbarLayout()) {
             setContentView(R.layout.and_lib_base_title_activity)
+            rootView = findViewById(R.id.and_lib_base_root)
             initToolbarConfig(isShowToolbar())
             if (bindLayout() != -1) {
                 and_lib_base_content_root?.let { root ->
@@ -173,9 +187,8 @@ abstract class BaseTitleActivity : AbsActivity() {
         //设置主题色
         //app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         //    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        //标题栏背景色,默认跟随状态栏颜色
         //设置标题栏背景色
-        toolsBar.setBackgroundColor(statusBarBgColor)
+        updateToolbarBgColor(themeToolbarBgColor)
         //设置标题
         mTitleView?.let {
             configTitle(it)
@@ -184,6 +197,10 @@ abstract class BaseTitleActivity : AbsActivity() {
         configNativeActionBar(showBackIcon())
         //设置标题栏阴影特效
         configToolbarElevation()
+    }
+
+    private fun updateToolbarBgColor(color: Int) {
+        mToolbar?.setBackgroundColor(color)
     }
 
     /**
@@ -335,13 +352,13 @@ abstract class BaseTitleActivity : AbsActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.and_lib_base_menu_single1 -> {
-                onMenuClicked(item.itemId, menuList[0].title)
+                onMenuClicked(item, menuList[0].menuId, menuList[0].title)
             }
             R.id.and_lib_base_menu_single2 -> {
-                onMenuClicked(item.itemId, menuList[1].title)
+                onMenuClicked(item, menuList[1].menuId, menuList[1].title)
             }
             R.id.and_lib_base_menu_single3 -> {
-                onMenuClicked(item.itemId, menuList[2].title)
+                onMenuClicked(item, menuList[2].menuId, menuList[2].title)
             }
             else -> {
             }
@@ -394,7 +411,7 @@ abstract class BaseTitleActivity : AbsActivity() {
                         }
                         2 -> {
                             val item3 = it.findItem(R.id.and_lib_base_menu_single3)
-                            item3?.let {i3 ->
+                            item3?.let { i3 ->
                                 i3.isVisible = true
                             }
                             item3
@@ -417,7 +434,7 @@ abstract class BaseTitleActivity : AbsActivity() {
         }
     }
 
-    protected open fun onMenuClicked(id: Int, title: CharSequence) {
+    protected open fun onMenuClicked(menu: MenuItem, menuId: Int, title: CharSequence) {
 
     }
 

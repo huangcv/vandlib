@@ -60,7 +60,7 @@ open class LoadingDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.and_lib_base_loading_dialog, container)
+        val view = inflater.inflate(R.layout.and_lib_base_loading_view, container)
         initView(view)
         return view
     }

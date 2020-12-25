@@ -1,18 +1,29 @@
 package com.cwand.lib.sample
 
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.lifecycle.Observer
 import com.cwand.lib.ktx.entity.MenuEntity
 import com.cwand.lib.ktx.ext.logD
-import com.cwand.lib.ktx.ui.BaseVMActivity
+import com.cwand.lib.ktx.utils.BlurUtils
 import com.cwand.lib.ktx.utils.NetworkUtils
 import com.cwand.lib.ktx.viewmodel.getViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MainActivity : BaseVMActivity<TestViewModel>() {
+
+class MainActivity : AppBaseVMActivity<TestViewModel>() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+//        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun titleTextRes(): Int {
         return R.string.app_name
@@ -27,7 +38,17 @@ class MainActivity : BaseVMActivity<TestViewModel>() {
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
-        addMenu(MenuEntity("设置语言"))
+        statusBarBgColor = Color.TRANSPARENT
+        toolbarBgColor = Color.TRANSPARENT
+        navigationBarBgColor = Color.TRANSPARENT
+        GlobalScope.launch {
+            val bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_1)
+            BlurUtils.blur(this@MainActivity, bitmap, 20, true)
+            withContext(Dispatchers.Main) {
+                window.decorView.setBackgroundDrawable(BitmapDrawable(bitmap))
+            }
+        }
+        addMenu(MenuEntity(1, "设置语言"), MenuEntity(2, "open"))
 //        "我是测试logD".logD()
 //        "我是测试logE".logE()
 //        "我是测试logW".logW()
@@ -54,11 +75,18 @@ class MainActivity : BaseVMActivity<TestViewModel>() {
 //        println(test2.isEmail())
     }
 
-    override fun onMenuClicked(id: Int, title: CharSequence) {
+    override fun onMenuClicked(menu: MenuItem, menuId: Int, title: CharSequence) {
+        if (menuId == 1) {
+            startActivity(Intent(this, SwitchLanguageActivity::class.java))
+        }else if (menuId == 2) {
+            startActivity(Intent(this, Test3::class.java))
+        }
 //        toast(title)
 //        val dialog = TestDialog()
 //        dialog.show(supportFragmentManager, "TestDialog")
-        startActivity(Intent(this, SwitchLanguageActivity::class.java))
+
+//        val mScreenBitmap: Bitmap =
+//            SurfaceControl.screenshot(dims.get(0) as Int, dims.get(1) as Int)
     }
 
 

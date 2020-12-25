@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <style name="VandBaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowBackground">@color/colorWindowBackgroundVand</item>
-        <item name="android:navigationBarColor">@color/colorNavigationBarVand</item>
-        <item name="colorPrimary">@color/colorPrimaryVand</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
-        <item name="colorAccent">@color/colorAccentVand</item>
-    </style>
-    <!--主页Activity主题-->
-    <style name="VandMainActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowBackground">@color/colorWindowBackgroundVand</item>
-        <item name="android:navigationBarColor">@color/colorNavigationBarVand</item>
+        <item name="statusBarBgColor">@android:color/white</item>
+        <item name="toolbarBgColor">@android:color/white</item>
+        <item name="navigationBarBgColor">@android:color/white</item>
         <item name="colorPrimary">@color/colorPrimaryVand</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
         <item name="colorAccent">@color/colorAccentVand</item>
         <item name="textAllCaps">false</item>
     </style>
+
+    <style name="VandBaseAppTheme.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="statusBarBgColor">@android:color/transparent</item>
+        <item name="toolbarBgColor">@android:color/transparent</item>
+        <item name="navigationBarBgColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/AppActivityAnimation</item>
+    </style>
+
+    <style name="VandBaseAppTheme.Dark">
+        <item name="statusBarBgColor">@color/colorPrimaryDarkVand</item>
+        <item name="toolbarBgColor">@color/colorPrimaryDarkVand</item>
+        <item name="navigationBarBgColor">@color/colorPrimaryDarkVand</item>
+        <item name="android:windowBackground">@color/colorWindowBackgroundVandDark</item>
+        <item name="android:navigationBarColor">@color/colorNavigationBarVandDark</item>
+    </style>
+
+    <!--主页Activity主题-->
+    <style name="VandMainActivityTheme" parent="VandBaseAppTheme">
+        <item name="android:windowBackground">@color/colorWindowBackgroundVandDark</item>
+        <item name="android:navigationBarColor">@color/colorNavigationBarVandDark</item>
+    </style>
     <!--启动页的主题-->
-    <style name="VandLauncherActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
+    <style name="VandLauncherActivityTheme" parent="VandBaseAppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@null</item>
-        <item name="android:navigationBarColor">@color/colorNavigationBarVand</item>
-        <item name="colorPrimary">@color/colorPrimaryVand</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkVand</item>
-        <item name="colorAccent">@color/colorAccentVand</item>
-        <item name="textAllCaps">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>

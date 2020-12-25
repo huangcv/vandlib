@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    状态栏背景色-->
+    <attr name="statusBarBgColor" format="color|reference" />
+    <!--    工具栏背景色-->
+    <attr name="toolbarBgColor" format="color|reference" />
+    <!--    导航栏背景色-->
+    <attr name="navigationBarBgColor" format="color|reference" />
+</resources>

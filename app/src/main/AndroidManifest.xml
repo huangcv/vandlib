@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/VandBaseAppTheme">
+        android:theme="@style/VandBaseAppTheme.Dark">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,11 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Test3" />
-        <activity android:name=".Test4" />
+        <activity
+            android:name=".Test3"
+            android:theme="@style/VandBaseAppTheme.Translucent" />
+        <activity
+            android:name=".Test4"
+            android:theme="@style/VandBaseAppTheme" />
         <activity
             android:name=".SwitchLanguageActivity"
-            android:label="切换语言" />
+            android:label="切换语言"
+            android:theme="@style/VandBaseAppTheme" />
     </application>
 
 </manifest>
