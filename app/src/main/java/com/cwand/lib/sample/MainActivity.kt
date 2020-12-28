@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import com.cwand.lib.ktx.entity.MenuEntity
-import com.cwand.lib.ktx.ext.logD
+import com.cwand.lib.ktx.extensions.logD
 import com.cwand.lib.ktx.utils.BlurUtils
 import com.cwand.lib.ktx.utils.NetworkUtils
 import com.cwand.lib.ktx.viewmodel.getViewModel
@@ -26,11 +26,11 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
     }
 
     override fun titleTextRes(): Int {
-        return R.string.app_name
+        return -1
     }
 
     override fun showBackIcon(): Boolean {
-        return true
+        return false
     }
 
     override fun bindLayout(): Int {
@@ -41,6 +41,7 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
         statusBarBgColor = Color.TRANSPARENT
         toolbarBgColor = Color.TRANSPARENT
         navigationBarBgColor = Color.TRANSPARENT
+        updateTitleIcon(R.drawable.ic_gongzai)
         GlobalScope.launch {
             val bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_1)
             BlurUtils.blur(this@MainActivity, bitmap, 20, true)
@@ -48,7 +49,7 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
                 window.decorView.setBackgroundDrawable(BitmapDrawable(bitmap))
             }
         }
-        addMenu(MenuEntity(1, "设置语言"), MenuEntity(2, "open"))
+        addMenu(MenuEntity(1, "设置语言", R.drawable.ic_multi_lang))
 //        "我是测试logD".logD()
 //        "我是测试logE".logE()
 //        "我是测试logW".logW()

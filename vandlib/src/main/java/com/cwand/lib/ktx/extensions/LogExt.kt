@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx.ext
+package com.cwand.lib.ktx.extensions
 
 import android.util.Log
 

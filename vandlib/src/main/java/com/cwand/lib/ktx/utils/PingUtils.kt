@@ -1,7 +1,7 @@
 package com.cwand.lib.ktx.utils
 
 import androidx.annotation.WorkerThread
-import com.cwand.lib.ktx.ext.logD
+import com.cwand.lib.ktx.extensions.logD
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

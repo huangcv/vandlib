@@ -1,6 +1,5 @@
-package com.cwand.lib.ktx.ext
+package com.cwand.lib.ktx.extensions
 
-import com.cwand.lib.ktx.BuildConfig
 import com.cwand.lib.ktx.exception.AppException
 import com.cwand.lib.ktx.exception.Error
 import com.cwand.lib.ktx.exception.ExceptionEngine

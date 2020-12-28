@@ -1,8 +1,7 @@
 package com.cwand.lib.sample
 
 import android.os.Bundle
-import com.cwand.lib.ktx.ui.BaseTitleActivity
-import com.cwand.lib.ktx.ext.delayRun
+import com.cwand.lib.ktx.extensions.delayRun
 import com.cwand.lib.ktx.ui.AbsActivity
 import com.cwand.lib.ktx.utils.ActManager
 

@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.cwand.lib.ktx.ext.logD
+import com.cwand.lib.ktx.extensions.logD
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 

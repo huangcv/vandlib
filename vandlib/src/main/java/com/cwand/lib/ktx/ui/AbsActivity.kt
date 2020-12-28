@@ -3,7 +3,6 @@ package com.cwand.lib.ktx.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.TypedArray
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +19,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.cwand.lib.ktx.R
-import com.cwand.lib.ktx.ext.logD
 import com.cwand.lib.ktx.livedata.OnEventAction
 import com.cwand.lib.ktx.utils.ActManager
 import com.cwand.lib.ktx.utils.LanguageUtils

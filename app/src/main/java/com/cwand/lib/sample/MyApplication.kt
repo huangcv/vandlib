@@ -5,7 +5,7 @@ import android.content.res.Configuration
 import com.cwand.lib.ktx.AndLib
 import com.cwand.lib.ktx.exception.AppException
 import com.cwand.lib.ktx.exception.ExceptionEngine
-import com.cwand.lib.ktx.ext.logD
+import com.cwand.lib.ktx.extensions.logD
 
 /**
  * @author : chunwei

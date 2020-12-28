@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
@@ -40,6 +41,7 @@ abstract class BaseTitleActivity : BaseActivity() {
         private set
 
     private var mTitleView: TextView? = null
+    private var mTitleIcon: ImageView? = null
 
     private val menuList: MutableList<MenuEntity> by lazy { mutableListOf<MenuEntity>() }
 
@@ -153,6 +155,7 @@ abstract class BaseTitleActivity : BaseActivity() {
             and_lib_base_vs_tool_bar.inflate()
             mToolbar = findViewById(R.id.and_lib_base_toolbar)
             mTitleView = findViewById(R.id.and_lib_base_toolbar_title)
+            mTitleIcon = findViewById(R.id.and_lib_base_toolbar_title_icon)
         }
         mToolbar?.let {
             if (!show) {
@@ -218,6 +221,10 @@ abstract class BaseTitleActivity : BaseActivity() {
         mTitleView?.let {
             it.text = title
         }
+    }
+
+    protected fun updateTitleIcon(@DrawableRes iconRes: Int) {
+        mTitleIcon?.setBackgroundResource(iconRes)
     }
 
     @SuppressLint("PrivateResource")

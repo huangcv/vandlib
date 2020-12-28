@@ -2,10 +2,7 @@ package com.cwand.lib.sample
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import com.cwand.lib.ktx.AndLib
-import com.cwand.lib.ktx.ext.logD
 import com.cwand.lib.ktx.viewmodel.BaseViewModel
-import com.cwand.lib.ktx.utils.ToastUtils
 import com.cwand.lib.ktx.viewmodel.launcher
 
 /**
@@ -27,7 +24,7 @@ class TestViewModel : BaseViewModel() {
     }
 
     private fun refreshData() {
-        launcher(true, "快点出来...") {
+        launcher(false, "快点出来...") {
             testLiveData.value = repository.getTestData()
         }.onStart {
 //            "请求开始".logD()

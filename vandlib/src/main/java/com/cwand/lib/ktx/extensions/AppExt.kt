@@ -1,7 +1,6 @@
-package com.cwand.lib.ktx.ext
+package com.cwand.lib.ktx.extensions
 
 import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -146,6 +145,16 @@ fun Context.getClipboardString(index: Int = 0): String {
     }
     return result
 }
+
+val Resources.statusBarHeight: Int
+    get() {
+        var resultValue = 0
+        val id = getIdentifier("status_bar_height", "dimen", "android")
+        if (id > 0) {
+            resultValue = getDimensionPixelSize(id)
+        }
+        return resultValue
+    }
 
 
 

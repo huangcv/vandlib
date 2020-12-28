@@ -1,12 +1,10 @@
 package com.cwand.lib.sample
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import com.cwand.lib.ktx.ui.BaseTitleActivity
-import com.cwand.lib.ktx.ext.delayRun
-import com.cwand.lib.ktx.ext.onClick
+import com.cwand.lib.ktx.extensions.delayRun
+import com.cwand.lib.ktx.extensions.onClick
 import com.cwand.lib.ktx.utils.ActManager
 import com.cwand.lib.ktx.utils.LanguageType
 import com.cwand.lib.ktx.utils.LanguageUtils
@@ -22,10 +20,6 @@ class SwitchLanguageActivity : AppBaseTitleActivity() {
 
     private var currentLanguageType: LanguageType? = null
     private var languageType: LanguageType = LanguageType.AUTO
-
-    override fun checkThemeColor() {
-        themeToolbarBgColor = Color.RED
-    }
 
     override fun titleTextRes(): Int {
         return R.string.switch_language

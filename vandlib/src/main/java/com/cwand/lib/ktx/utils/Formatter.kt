@@ -1,8 +1,6 @@
 package com.cwand.lib.ktx.utils
 
 import android.annotation.SuppressLint
-import com.cwand.lib.ktx.ext.FormatterExt
-import com.cwand.lib.ktx.ext.updateLocale
 import java.text.SimpleDateFormat
 import java.util.*
 

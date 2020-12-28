@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import android.text.TextUtils
-import com.cwand.lib.ktx.ext.getAppSpValue
-import com.cwand.lib.ktx.ext.putAppSpValue
+import com.cwand.lib.ktx.extensions.getAppSpValue
+import com.cwand.lib.ktx.extensions.putAppSpValue
 import java.util.*
 
 /**

@@ -4,21 +4,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
+        <com.cwand.lib.ktx.widgets.LightningView
+            android:id="@+id/lightning"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:background="@color/colorAccent"
+            android:visibility="gone" />-->
+    <!--
 
-    <com.cwand.lib.ktx.widgets.LightningView
-        android:id="@+id/lightning"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:background="@color/colorAccent"
-        android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/home_coin_news"
+            android:textColor="@android:color/white"
+            android:textSize="29sp" />
+    -->
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/home_coin_news"
-        android:textColor="@android:color/white"
-        android:textSize="29sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_screen_capture_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="启动截屏服务" />
+
+        <Button
+            android:id="@+id/btn_screen_capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="截屏" />
+
+    </LinearLayout>
 
 </FrameLayout>

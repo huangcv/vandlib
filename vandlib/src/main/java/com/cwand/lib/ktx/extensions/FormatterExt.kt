@@ -1,9 +1,8 @@
-package com.cwand.lib.ktx.ext
+package com.cwand.lib.ktx.extensions
 
-import androidx.annotation.IntRange
-import com.cwand.lib.ktx.ext.FormatterExt.DECIMAL_FORMAT
-import com.cwand.lib.ktx.ext.FormatterExt.DEFAULT_PATTERN
-import com.cwand.lib.ktx.ext.FormatterExt.defaultSDF
+import com.cwand.lib.ktx.extensions.FormatterExt.DECIMAL_FORMAT
+import com.cwand.lib.ktx.extensions.FormatterExt.DEFAULT_PATTERN
+import com.cwand.lib.ktx.extensions.FormatterExt.defaultSDF
 import java.lang.StringBuilder
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat

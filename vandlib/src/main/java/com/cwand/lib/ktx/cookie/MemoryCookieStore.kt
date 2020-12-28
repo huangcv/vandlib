@@ -1,6 +1,6 @@
 package com.cwand.lib.ktx.cookie
 
-import com.cwand.lib.ktx.ext.notNull
+import com.cwand.lib.ktx.extensions.notNull
 import okhttp3.Cookie
 import okhttp3.HttpUrl
 import java.util.*

@@ -6,7 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
-import com.cwand.lib.ktx.ext.connectivityManager
+import com.cwand.lib.ktx.extensions.connectivityManager
 
 /**
  * @author : chunwei

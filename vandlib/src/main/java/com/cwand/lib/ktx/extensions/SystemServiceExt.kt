@@ -1,4 +1,4 @@
-package com.cwand.lib.ktx.ext
+package com.cwand.lib.ktx.extensions
 
 import android.app.*
 import android.app.job.JobScheduler
@@ -8,6 +8,7 @@ import android.hardware.SensorManager
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.MediaRouter
+import android.media.projection.MediaProjectionManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.BatteryManager
@@ -52,3 +53,4 @@ val Context.downloadManager get() = getSystemService<DownloadManager>()
 val Context.batteryManager get() = getSystemService<BatteryManager>()
 val Context.jobScheduler get() = getSystemService<JobScheduler>()
 val Context.accessibilityManager get() = getSystemService<AccessibilityManager>()
+val Context.mediaProjectionManager get() = getSystemService<MediaProjectionManager>()

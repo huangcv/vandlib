@@ -6,17 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/and_lib_base_toolbar_title"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ellipsize="middle"
-        android:gravity="center"
-        android:maxWidth="170dp"
-        android:singleLine="true"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        tools:text="标题" />
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/and_lib_base_toolbar_title_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/and_lib_base_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="middle"
+            android:gravity="center"
+            android:maxWidth="170dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            tools:text="标题" />
+
+    </FrameLayout>
 
 </androidx.appcompat.widget.Toolbar>

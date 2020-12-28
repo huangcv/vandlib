@@ -1,6 +1,5 @@
 package com.cwand.lib.ktx.interceptors.log
 
-import com.cwand.lib.ktx.ext.Level
 import okhttp3.*
 import okhttp3.internal.http.promisesBody
 import okio.Buffer

@@ -12,6 +12,7 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
@@ -68,6 +69,8 @@ open abstract class BaseTitleFragment : BaseFragment() {
         }
 
     private var mTitleView: TextView? = null
+
+    private var mTitleIcon: ImageView? = null
 
     @DrawableRes
     open fun backIconRes(): Int = View.NO_ID
@@ -143,6 +146,10 @@ open abstract class BaseTitleFragment : BaseFragment() {
         mToolbar?.setBackgroundColor(color)
     }
 
+    protected fun updateTitleIcon(@DrawableRes iconRes: Int) {
+        mTitleIcon?.setBackgroundResource(iconRes)
+    }
+
     /**
      * 初始化标题栏
      */
@@ -157,6 +164,7 @@ open abstract class BaseTitleFragment : BaseFragment() {
                 it.findViewById<ViewStub>(R.id.and_lib_base_vs_tool_bar_fragment).inflate()
                 mToolbar = it.findViewById(R.id.and_lib_base_toolbar)
                 mTitleView = it.findViewById(R.id.and_lib_base_toolbar_title)
+                mTitleIcon = it.findViewById(R.id.and_lib_base_toolbar_title_icon)
             }
             mToolbar?.let { toolBar ->
                 if (!show) {
