@@ -50,30 +50,7 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
             }
         }
         addMenu(MenuEntity(1, "设置语言", R.drawable.ic_multi_lang))
-//        "我是测试logD".logD()
-//        "我是测试logE".logE()
-//        "我是测试logW".logW()
-//        "我是测试logI".logI()
-//        "我是测试logV".logV()
-//        val list = mutableListOf<String>()
-//        list.logD()
-//        Logger.logD("Logger")
-////        loading_view.postDelayed(Runnable {
-////            addMenu(MenuEntity("1", titleColor =  Color.YELLOW), MenuEntity("2", android.R.drawable.ic_menu_close_clear_cancel), MenuEntity("3"))
-////        }, 3000)
-////
-//        loading_view.postDelayed(Runnable {
-//            addMenu(MenuEntity("1", titleColor =  Color.RED))
-//            toolbarElevation = 30f
-//        }, 6000)
-        putFragment(TestFragment.newInstance(), R.id.fragment_root)
-//        loading_view?.onClick{
-//        }
-//
-//        var test1:String? = null
-//        var test2 = "huangchunwei@163.com"
-//        println(test1.isEmail())
-//        println(test2.isEmail())
+        putFragment(FunctionNavigationFragment.newInstance(), R.id.fragment_root)
     }
 
     override fun onMenuClicked(menu: MenuItem, menuId: Int, title: CharSequence) {
@@ -82,55 +59,10 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
         }else if (menuId == 2) {
             startActivity(Intent(this, Test3::class.java))
         }
-//        toast(title)
-//        val dialog = TestDialog()
-//        dialog.show(supportFragmentManager, "TestDialog")
-
-//        val mScreenBitmap: Bitmap =
-//            SurfaceControl.screenshot(dims.get(0) as Int, dims.get(1) as Int)
     }
-
 
     override fun initListeners() {
-
-        //https://run.mocky.io/v3/f7540cf9-95ee-4ccd-88f5-c9a9f297a476
-//        val client = OkHttpClient.Builder()
-//            .addInterceptor(LogInterceptor.Builder().build())
-//            .build()
-//        val retrofitBuilder = Retrofit.Builder().baseUrl("https://run.mocky.io/").client(client)
-//        retrofitBuilder.addConverterFactory(GsonConverterFactory.create())
-//        val retrofit = retrofitBuilder.build()
-//        val testApi = retrofit.create(TestApi::class.java)
-//        val params = mutableMapOf("client" to "Android", "md5" to "dslfjadfl231dsfjauj12'WEFdofha")
-//        testApi.test(params)?.enqueue(object : Callback<TestData?> {
-//            override fun onResponse(call: Call<TestData?>, response: Response<TestData?>) {
-//
-//            }
-//
-//            override fun onFailure(call: Call<TestData?>, t: Throwable) {
-//            }
-//        })
-//        RepositoryConfig.networkRepositoryConfig =
-//            NetworkRepositoryConfig.Builder().readTimeout(1).writeTimeout(1).connectTimeout(1)
-//                .build()
-//        nativeRetrofitRequest()
     }
-
-//    private fun nativeRetrofitRequest() {
-//        val params = mutableMapOf("client" to "Android", "md5" to "dslfjadfl231dsfjauj12'WEFdofha")
-//        RetrofitManager
-//            .createService(TestApi::class.java)
-//            .test(params)
-//            ?.enqueue(object : Callback<TestData?> {
-//                override fun onResponse(call: Call<TestData?>, response: Response<TestData?>) {
-//
-//                }
-//
-//                override fun onFailure(call: Call<TestData?>, t: Throwable) {
-//                }
-//            })
-//    }
-
     override fun initData() {
         GlobalScope.launch(Dispatchers.IO) {
             NetworkUtils.networkConnected().logD()

@@ -14,10 +14,11 @@
 
     <string name="contract_open_a_contract_account">去開通合約賬戶?</string>
     <string name="switch_language">切換語言</string>
-    <string name="lang_auto">自動</string>
+    <string name="lang_auto">自动</string>
     <string name="lang_zh">中文</string>
-    <string name="lang_ft">繁體</string>
+    <string name="lang_ft">繁体</string>
     <string name="lang_en">英文</string>
-    <string name="lang_ko">韓文</string>
+    <string name="lang_ko">韩文</string>
     <string name="confirm">確定</string>
+    <string name="widgets">控件展示</string>
 </resources>

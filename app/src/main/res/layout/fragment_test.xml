@@ -24,6 +24,7 @@
     -->
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -44,5 +45,11 @@
             android:text="截屏" />
 
     </LinearLayout>
+
+
+    <com.cwand.lib.ktx.widgets.kline.KLineView
+        android:id="@+id/kv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

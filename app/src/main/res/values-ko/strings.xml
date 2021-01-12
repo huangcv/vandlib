@@ -14,10 +14,11 @@
 
     <string name="contract_open_a_contract_account">선물거래계정 개통하러가기?</string>
     <string name="switch_language">언어 전환</string>
-    <string name="lang_auto">자동 적</string>
-    <string name="lang_zh">중국어</string>
-    <string name="lang_ft">번 체</string>
-    <string name="lang_en">영어</string>
-    <string name="lang_ko">한글</string>
+    <string name="lang_auto">自动</string>
+    <string name="lang_zh">中文</string>
+    <string name="lang_ft">繁体</string>
+    <string name="lang_en">英文</string>
+    <string name="lang_ko">韩文</string>
     <string name="confirm">확정 하 다</string>
+    <string name="widgets">컨트롤</string>
 </resources>

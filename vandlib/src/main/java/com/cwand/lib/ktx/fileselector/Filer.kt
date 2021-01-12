@@ -10,7 +10,6 @@ import android.app.Application
  */
 class Filer {
 
-
     companion object {
         fun init(application: Application) {
 

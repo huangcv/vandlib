@@ -20,4 +20,5 @@
     <string name="lang_en">英文</string>
     <string name="lang_ko">韩文</string>
     <string name="confirm">确定</string>
+    <string name="widgets">控件展示</string>
 </resources>

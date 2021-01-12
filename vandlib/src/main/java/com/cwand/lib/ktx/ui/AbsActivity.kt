@@ -53,8 +53,10 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
 
     @ColorInt
     protected var themeStatusBarBgColor = Color.WHITE
+
     @ColorInt
     protected var themeToolbarBgColor = Color.WHITE
+
     @ColorInt
     protected var themeNavigationBarBgColor = Color.WHITE
 
@@ -77,6 +79,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
                 configNavigationBarColor(value)
             }
         }
+
     //状态栏字体颜色是否为亮色(即颜色为暗色),默认false
     var statusBarLightMode: Boolean = false
         set(value) {
@@ -115,6 +118,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     private fun configStatusBar() {
         if (fullScreen)
             return
+        statusBarBgColor = Color.TRANSPARENT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             var value = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             if (contentImmersive) {
