@@ -37,9 +37,9 @@ fun FormatterExt.updateLocale() {
     defaultSDF = SimpleDateFormat(DEFAULT_PATTERN)
 }
 
-fun String.formatDate(dateTimestamp: Long, pattern: String = DEFAULT_PATTERN): String {
+fun Long.formatData(pattern: String = DEFAULT_PATTERN):String{
     defaultSDF.applyPattern(pattern)
-    return defaultSDF.format(Date(dateTimestamp))
+    return defaultSDF.format(Date(this))
 }
 
 fun String.formatDate(pattern: String = DEFAULT_PATTERN): String {
