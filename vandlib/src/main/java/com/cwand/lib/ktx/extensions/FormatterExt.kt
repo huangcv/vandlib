@@ -17,7 +17,7 @@ import java.util.*
 
 fun main() {
     println(1.201111111.formatDecimal(4))
-    println("1.0".deleteZero())
+    println("111111111.0190000000".deleteZero())
     println(System.currentTimeMillis().toString().formatDate())
     println(3.formatWeek())
     println(1.fillZeroWhenSingleDigit())
@@ -47,7 +47,7 @@ fun String.formatDate(pattern: String = DEFAULT_PATTERN): String {
     return defaultSDF.format(Date(toLong()))
 }
 
-fun String.deleteZero(pattern: String = "#0.########"): String {
+fun String.deleteZero(pattern: String = "#0.###############"): String {
     DECIMAL_FORMAT.applyPattern(pattern)
     return DECIMAL_FORMAT.format(toDouble())
 }

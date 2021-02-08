@@ -278,11 +278,11 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
 
     }
 
-    protected open fun addActivityToStack() {
+    open fun addActivityToStack() {
         ActManager.add(this)
     }
 
-    protected open fun removeActivityFromStack() {
+    open fun removeActivityFromStack() {
         ActManager.remove(this)
     }
 
@@ -431,7 +431,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     /**
      * 关闭系统键盘
      */
-    protected open fun closeKeyboard() {
+    open fun closeKeyboard() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(
             window.decorView.windowToken,

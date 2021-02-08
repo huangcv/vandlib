@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
+import androidx.annotation.WorkerThread
 import com.cwand.lib.ktx.extensions.connectivityManager
 
 /**
@@ -19,6 +20,7 @@ class NetworkUtils {
     companion object {
 
         @JvmStatic
+        @WorkerThread
         fun networkConnected(): Boolean {
             return PingUtils.pingTest()
         }

@@ -240,7 +240,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
         return rootView
     }
 
-    protected open fun createViews(
+    open fun createViews(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -258,7 +258,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
         innerInit(arguments, view)
     }
 
-    protected open fun innerInit(arguments: Bundle?, view: View) {
+    open fun innerInit(arguments: Bundle?, view: View) {
         initViews(arguments, view)
         initListeners()
     }
@@ -292,7 +292,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
     /**
      * 关闭系统键盘
      */
-    protected open fun closeKeyboard() {
+    open fun closeKeyboard() {
         val inputMethodManager =
             requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(

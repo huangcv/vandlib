@@ -18,11 +18,6 @@ abstract class BaseVMFragment<VM : BaseViewModel> : BaseTitleFragment() {
     }
 
     abstract fun createViewModel(): VM
-    abstract fun initObservers()
 
-    override fun innerInit(arguments: Bundle?, view: View) {
-        initObservers()
-        super.innerInit(arguments, view)
-    }
 
 }
