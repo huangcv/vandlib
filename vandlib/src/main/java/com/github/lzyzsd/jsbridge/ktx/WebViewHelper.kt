@@ -49,7 +49,7 @@ class WebViewHelper {
 //                settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.NORMAL
 //            }
                 //设置是否阻塞图片加载,页面加载完成之后,需要再次设置为false,让页面再次加载图片,达到优先加载内容后加载图片的目的
-                settings.blockNetworkImage = true
+                settings.blockNetworkImage = false
                 //是否启用保存密码的功能
                 settings.savePassword = false
                 //是否允许执行JavaScript代码,默认false
