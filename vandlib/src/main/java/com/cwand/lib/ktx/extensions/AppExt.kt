@@ -56,8 +56,8 @@ fun Context.putSpValue(
 /**
  * 获取其他配置的sp值
  */
-fun Context.getSpValue(key: String, spName: String = DEFAULT_OTHER_SP_NAME): String {
-    return getNewSp(spName).getString(key, "") ?: ""
+fun Context.getSpValue(key: String, spName: String = DEFAULT_OTHER_SP_NAME, defValue:String = ""): String {
+    return getNewSp(spName).getString(key, defValue) ?: defValue
 }
 
 /**
@@ -73,8 +73,8 @@ fun Context.putAppSpValue(
 /**
  * 获取App配置的sp值
  */
-fun Context.getAppSpValue(key: String): String {
-    return getAppSp().getString(key, "") ?: ""
+fun Context.getAppSpValue(key: String, defValue:String = ""): String {
+    return getAppSp().getString(key, defValue) ?: defValue
 }
 
 /**

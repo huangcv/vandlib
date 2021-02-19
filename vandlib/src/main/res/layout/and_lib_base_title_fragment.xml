@@ -6,6 +6,12 @@
     android:orientation="vertical">
 
     <ViewStub
+        android:id="@+id/and_lib_base_vs_fake_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/and_lib_base_fake_status_bar" />
+
+    <ViewStub
         android:id="@+id/and_lib_base_vs_tool_bar_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

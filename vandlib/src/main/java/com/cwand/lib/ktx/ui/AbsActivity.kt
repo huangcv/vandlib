@@ -246,7 +246,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
         initThemeValue()
         super.onCreate(savedInstanceState)
         addActivityToStack()
-        handleBundle(savedInstanceState)
+        handleBundle(intent.extras)
         initStatus = START
         initStatusBar()
         innerInit(savedInstanceState)

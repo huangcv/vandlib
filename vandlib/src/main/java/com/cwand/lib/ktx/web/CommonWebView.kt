@@ -5,7 +5,10 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.github.lzyzsd.jsbridge.ktx.*
-import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
+import java.lang.reflect.WildcardType
 
 
 /**
@@ -16,8 +19,7 @@ import com.google.gson.Gson
  */
 class CommonWebView : FrameLayout {
 
-    var webView: BridgeWebView? = null
-        private set
+    private var webView: BridgeWebView? = null
 
     constructor(context: Context) : this(context, null)
 
@@ -31,13 +33,10 @@ class CommonWebView : FrameLayout {
         //添加WebView
         webView = BridgeWebView(context)
         val webLp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        addView(webView, webLp)
         WebViewHelper.initWebSetting(webView)
+        addView(webView, webLp)
         val chromeClient = CommonWebChromeClient(this)
         webView?.webChromeClient = chromeClient
-        webView?.let {
-            it.webViewClient = CommonWebViewClient(it)
-        }
         webView?.loadUrl("https://www.baidu.com/")
     }
 
@@ -99,62 +98,53 @@ class CommonWebView : FrameLayout {
         return false
     }
 
-    inline fun <reified T : Any> registerNativeHandler(
-        handlerName: String,
-        handler: JsCallBack<T>
-    ) {
-        webView?.registerHandler(handlerName, object : BridgeHandler {
-            override fun handler(data: String?, function: CallBackFunction) {
-                try {
-                    val genericType = getGenericType<T>()
-                    if (data == null || data.isEmpty()) {
-                        if (genericType == String::class.java) {
-                            handler.handler(handlerName, "" as T, function)
-                            return
-                        }
-                    } else {
-                        if (genericType == String::class.java) {
-                            handler.handler(handlerName, data as T, function)
-                        } else {
-                            val result = Gson().fromJson(data, genericType) as T
-                            handler.handler(handlerName, result, function)
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        })
+//    fun <T> registerNativeHandler(handlerName: String, handler: JsCallBack<T>) {
+//        webView?.registerHandler(handlerName, object : BridgeHandler {
+//            override fun handler(data: String?, function: CallBackFunction) {
+//                if (handler != null) {
+//                    try {
+//                        val genericType: Type = getGenericType(handler, 0)
+//                        if (data == null || data.isEmpty()) {
+//                            val typeToken = TypeToken.get<Any>(genericType) as TypeToken<T>
+//                            if (typeToken.rawType == String::class.java) {
+//                                handler.handler(handlerName!!, "" as T, function)
+//                                return
+//                            }
+//                            return
+//                        }
+//                        val typeToken = TypeToken.get<Any>(genericType) as TypeToken<T>
+//                        if (typeToken.rawType == String::class.java) {
+//                            handler.handler(handlerName!!, data as T, function)
+//                            return
+//                        }
+//                        val result: T = JsonUtils.getSafeGson()
+//                            .fromJson(data, BeanAdapter.getGenericType(handler, 0))
+//                        handler.handler(handlerName!!, result, function)
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
+//                }
+//            }
+//        })
+//    }
+
+    @Throws(java.lang.Exception::class)
+    private fun getGenericType(o: Any, index: Int): Type {
+        val genType = o.javaClass.genericSuperclass
+        return if (genType !is ParameterizedType) {
+            Any::class.java
+        } else {
+            getActualType(index, genType)
+        }
     }
 
-    inline fun <reified T : Any> callJsMethod(
-        methodName: String,
-        data: String,
-        handler: JsCallBack<T>
-    ) {
-        webView?.callHandler(methodName, data, object : CallBackFunction {
-            override fun onCallBack(data: String?) {
-                try {
-                    val genericType = getGenericType<T>()
-                    if (data == null || data.isEmpty()) {
-                        if (genericType == String::class.java) {
-                            handler.handler(methodName, "" as T, this)
-                            return
-                        }
-                    } else {
-                        if (genericType == String::class.java) {
-                            handler.handler(methodName, data as T, this)
-                        } else {
-                            val result = Gson().fromJson(data, genericType) as T
-                            handler.handler(methodName, result, this)
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        })
+    @Throws(java.lang.Exception::class)
+    private fun getActualType(index: Int, type: ParameterizedType): Type {
+        val types: Array<Type> = type.actualTypeArguments
+        require(!(index < 0 || index >= types.size)) { "Index " + index + " not in range [0," + types.size + ") for " + type }
+        val paramType = types[index]
+        return if (paramType is WildcardType) {
+            paramType.upperBounds[0]
+        } else paramType
     }
-
-    inline fun <reified T> getGenericType() = T::class.java
 }

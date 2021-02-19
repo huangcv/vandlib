@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.cwand.lib.ktx.R
 import com.cwand.lib.ktx.entity.MenuEntity
+import com.cwand.lib.ktx.extensions.gone
+import com.cwand.lib.ktx.extensions.visible
 
 /**
  * 带标题栏的fragment
@@ -55,17 +57,37 @@ open abstract class BaseTitleFragment : BaseFragment() {
             }
         }
 
+    @ColorInt
+    var fakeStatusBarBgColor: Int = toolbarBgColor
+        set(value) {
+            if (value != field) {
+                field = value
+                updateFakeStatusBarViewBgColor(value)
+            }
+        }
+
     protected var contentView: View? = null
 
     private var toolbarIsInit = false
 
     var mToolbar: Toolbar? = null
         private set
-
+    var fakeStatusView: View? = null
+        private set
     var toolbarElevation: Float = 0f
         set(value) {
-            field = value
-            configToolbarElevation()
+            if (value != field) {
+                field = value
+                configToolbarElevation()
+            }
+        }
+
+    var fakeStatusBarShown: Boolean = true
+        set(value) {
+            if (value != field) {
+                field = value
+                configFakeStatusBar()
+            }
         }
 
     private var mTitleView: TextView? = null
@@ -102,6 +124,8 @@ open abstract class BaseTitleFragment : BaseFragment() {
 
     open fun showBackIcon(): Boolean = true
 
+    open fun showFakeStatusBar(): Boolean = true
+
     open fun hideBackIcon(show: Boolean) {
         requireActionBarDoWith {
             configHomeButton(it, show)
@@ -116,19 +140,19 @@ open abstract class BaseTitleFragment : BaseFragment() {
     }
 
     override fun createViews(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View? {
         if (!skipBaseToolbarLayout()) {
             rootView = inflater.inflate(R.layout.and_lib_base_title_fragment, container, false)
             initToolbarConfig(isShowToolbar())
             rootView?.let {
                 it.findViewById<FrameLayout>(R.id.and_lib_base_content_root_fragment)
-                    ?.let { cv ->
-                        cv.removeAllViews()
-                        contentView = inflater.inflate(bindLayout(), cv, true)
-                    }
+                        ?.let { cv ->
+                            cv.removeAllViews()
+                            contentView = inflater.inflate(bindLayout(), cv, true)
+                        }
             }
             return rootView
         }
@@ -146,6 +170,10 @@ open abstract class BaseTitleFragment : BaseFragment() {
         mToolbar?.setBackgroundColor(color)
     }
 
+    private fun updateFakeStatusBarViewBgColor(color: Int) {
+        fakeStatusView?.setBackgroundColor(color)
+    }
+
     protected fun updateTitleIcon(@DrawableRes iconRes: Int) {
         mTitleIcon?.setBackgroundResource(iconRes)
     }
@@ -157,6 +185,16 @@ open abstract class BaseTitleFragment : BaseFragment() {
         //设置fragment 是否有menu
         setHasOptionsMenu(false)
         rootView?.let {
+            if (showFakeStatusBar()) {
+                //展示状态栏占位符View
+                if (fakeStatusView == null) {
+                    it.findViewById<ViewStub>(R.id.and_lib_base_vs_fake_status_bar).inflate()
+                    fakeStatusView = it.findViewById(R.id.and_lib_base_fake_status_view)
+                    //设置高度
+                    fakeStatusView?.layoutParams?.height = getStatusBarHeight()
+                    configFakeStatusBar()
+                }
+            }
             if (mToolbar == null) {
                 if (!show) {
                     return
@@ -231,7 +269,7 @@ open abstract class BaseTitleFragment : BaseFragment() {
         menuInflater = inflater
         menuCreateState = 1
         val showMenu =
-            !fullScreen && !skipBaseToolbarLayout() && menuList.isNotEmpty() && isShowToolbar()
+                !fullScreen && !skipBaseToolbarLayout() && menuList.isNotEmpty() && isShowToolbar()
         if (showMenu) {
             menuCreateState = 2
             menuInflater?.inflate(bindMenuLayout(), mMenu)
@@ -284,16 +322,16 @@ open abstract class BaseTitleFragment : BaseFragment() {
                     val ss = SpannableString(iv.value.title)
                     //字体颜色
                     ss.setSpan(
-                        ForegroundColorSpan(titleC),
-                        0,
-                        iv.value.title.length,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            ForegroundColorSpan(titleC),
+                            0,
+                            iv.value.title.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                     //字体大小
                     ss.setSpan(AbsoluteSizeSpan(titleS, true),
-                        0,
-                        iv.value.title.length,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            0,
+                            iv.value.title.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     when (iv.index) {
                         1 -> {
                             val item2 = it.findItem(R.id.and_lib_base_menu_f_single2)
@@ -352,6 +390,13 @@ open abstract class BaseTitleFragment : BaseFragment() {
         configToolbarElevation()
     }
 
+    private fun configFakeStatusBar() {
+        fakeStatusView?.let {
+            if (fakeStatusBarShown) it.visible() else it.gone()
+            updateFakeStatusBarViewBgColor(themeStatusBarBgColor)
+        }
+    }
+
     private fun configToolbarElevation() {
         mToolbar?.let {
             if (toolbarElevation > 0) {
@@ -386,11 +431,11 @@ open abstract class BaseTitleFragment : BaseFragment() {
         }
         (activity as AppCompatActivity).supportActionBar?.let { toolBar ->
             val upArrow =
-                ContextCompat.getDrawable(requireContext(), R.drawable.abc_ic_ab_back_material)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
                 it.setColorFilter(
-                    color,
-                    PorterDuff.Mode.SRC_ATOP
+                        color,
+                        PorterDuff.Mode.SRC_ATOP
                 )
                 toolBar.setHomeAsUpIndicator(it)
             }
@@ -429,11 +474,11 @@ open abstract class BaseTitleFragment : BaseFragment() {
         }
         if (backIconDrawable() == null) {
             val upArrow =
-                ContextCompat.getDrawable(requireContext(), R.drawable.abc_ic_ab_back_material)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
                 it.setColorFilter(
-                    defBackIconColor(),
-                    PorterDuff.Mode.SRC_ATOP
+                        defBackIconColor(),
+                        PorterDuff.Mode.SRC_ATOP
                 )
                 actionBar.setHomeAsUpIndicator(it)
             }
