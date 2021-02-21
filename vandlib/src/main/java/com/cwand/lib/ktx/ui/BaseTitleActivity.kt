@@ -236,8 +236,8 @@ abstract class BaseTitleActivity : BaseActivity() {
             val upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
                 it.setColorFilter(
-                    color,
-                    PorterDuff.Mode.SRC_ATOP
+                        color,
+                        PorterDuff.Mode.SRC_ATOP
                 )
                 toolBar.setHomeAsUpIndicator(it)
             }
@@ -278,8 +278,8 @@ abstract class BaseTitleActivity : BaseActivity() {
             val upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
                 it.setColorFilter(
-                    defBackIconColor(),
-                    PorterDuff.Mode.SRC_ATOP
+                        defBackIconColor(),
+                        PorterDuff.Mode.SRC_ATOP
                 )
                 actionBar.setHomeAsUpIndicator(it)
             }
@@ -309,8 +309,10 @@ abstract class BaseTitleActivity : BaseActivity() {
 
     //---右侧菜单相关---
 
-    protected fun addMenu(vararg menus: MenuEntity) {
-        menuList.clear()
+    protected fun addMenu(vararg menus: MenuEntity, isClean: Boolean = false) {
+        if (isClean) {
+            menuList.clear()
+        }
         menuCanReload = true
         //更具菜单个数选择对应的布局
         menuList.addAll(menus)
@@ -342,7 +344,7 @@ abstract class BaseTitleActivity : BaseActivity() {
         mMenu = menu
         menuCreateState = 1
         val showMenu =
-            !fullScreen && !skipBaseToolbarLayout() && menuList.isNotEmpty() && isShowToolbar()
+                !fullScreen && !skipBaseToolbarLayout() && menuList.isNotEmpty() && isShowToolbar()
         if (showMenu) {
             menuCreateState = 2
             menuInflater.inflate(bindMenuLayout(), mMenu)
@@ -398,16 +400,16 @@ abstract class BaseTitleActivity : BaseActivity() {
                     val ss = SpannableString(iv.value.title)
                     //字体颜色
                     ss.setSpan(
-                        ForegroundColorSpan(titleC),
-                        0,
-                        iv.value.title.length,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            ForegroundColorSpan(titleC),
+                            0,
+                            iv.value.title.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                     //字体大小
                     ss.setSpan(AbsoluteSizeSpan(titleS, true),
-                        0,
-                        iv.value.title.length,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            0,
+                            iv.value.title.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     when (iv.index) {
                         1 -> {
                             val item2 = it.findItem(R.id.and_lib_base_menu_single2)
