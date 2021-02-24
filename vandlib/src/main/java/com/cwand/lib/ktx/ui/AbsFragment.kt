@@ -104,7 +104,7 @@ abstract class AbsFragment : Fragment(), OnEventAction {
 
     @LayoutRes
     abstract fun bindLayout(): Int
-    abstract fun initViews(savedInstanceState: Bundle?, contentView: View)
+    abstract fun initViews(bundle: Bundle?, contentView: View)
     abstract fun initListeners()
     abstract fun lazyInit()
 

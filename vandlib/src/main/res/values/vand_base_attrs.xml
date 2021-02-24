@@ -6,4 +6,9 @@
     <attr name="toolbarBgColor" format="color|reference" />
     <!--    导航栏背景色-->
     <attr name="navigationBarBgColor" format="color|reference" />
+
+    <declare-styleable name="LoadingView">
+        <attr name="outer_circle_bg_color" format="color|reference" />
+        <attr name="inner_dot_bg_color" format="reference|color" />
+    </declare-styleable>
 </resources>

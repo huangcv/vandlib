@@ -3,6 +3,8 @@ package com.cwand.lib.ktx.extensions
 import android.content.ClipData
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.util.TypedValue
 
@@ -56,7 +58,11 @@ fun Context.putSpValue(
 /**
  * 获取其他配置的sp值
  */
-fun Context.getSpValue(key: String, spName: String = DEFAULT_OTHER_SP_NAME, defValue:String = ""): String {
+fun Context.getSpValue(
+    key: String,
+    spName: String = DEFAULT_OTHER_SP_NAME,
+    defValue: String = ""
+): String {
     return getNewSp(spName).getString(key, defValue) ?: defValue
 }
 
@@ -73,7 +79,7 @@ fun Context.putAppSpValue(
 /**
  * 获取App配置的sp值
  */
-fun Context.getAppSpValue(key: String, defValue:String = ""): String {
+fun Context.getAppSpValue(key: String, defValue: String = ""): String {
     return getAppSp().getString(key, defValue) ?: defValue
 }
 
@@ -81,49 +87,61 @@ fun Context.getAppSpValue(key: String, defValue:String = ""): String {
  * 像素转DP
  */
 val Float.toDp
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
         this,
-        Resources.getSystem().displayMetrics)
+        Resources.getSystem().displayMetrics
+    )
 
 /**
  * 像素转SP
  */
 val Float.toSp
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
         this,
-        Resources.getSystem().displayMetrics)
+        Resources.getSystem().displayMetrics
+    )
 
 /**
  * 像素转DP
  */
 val Int.toDp
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
         this.toFloat(),
-        Resources.getSystem().displayMetrics)
+        Resources.getSystem().displayMetrics
+    )
 
 /**
  * 像素转SP
  */
 val Int.toSp
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
         this.toFloat(),
-        Resources.getSystem().displayMetrics)
+        Resources.getSystem().displayMetrics
+    )
 
 /**
  * 像素转DP
  */
 val Double.toDp
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
         this.toFloat(),
-        Resources.getSystem().displayMetrics)
+        Resources.getSystem().displayMetrics
+    )
 
 /**
  * 像素转SP
  */
 val Double.toSp
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
         this.toFloat(),
-        Resources.getSystem().displayMetrics)
+        Resources.getSystem().displayMetrics
+    )
 
 /**
  * 复制到剪贴板
@@ -156,5 +174,25 @@ val Resources.statusBarHeight: Int
         return resultValue
     }
 
+val Context.appVersionName: String
+    get() {
+        return try {
+            val info: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+            info.versionName
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
 
+val Context.appVersionCode: Int
+    get() {
+        return try {
+            val info: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+            info.versionCode
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+    }
 

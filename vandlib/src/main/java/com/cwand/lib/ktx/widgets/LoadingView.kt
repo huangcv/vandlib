@@ -8,7 +8,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import com.cwand.lib.ktx.R
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -48,6 +50,12 @@ open class LoadingView : View {
 
     var showOverAnim = true
 
+    @ColorInt
+    private var outerCircleBgColor: Int = Color.WHITE
+
+    @ColorInt
+    private var innerDotBgColor: Int = Color.WHITE
+
     private val loadingAnimDuration = 1500L
 
     private val overAnimDuration = 200L
@@ -80,7 +88,7 @@ open class LoadingView : View {
     private val paint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.WHITE
+            color = outerCircleBgColor
             style = Paint.Style.STROKE
             strokeWidth = outerCircleStrokeWidth
         }
@@ -88,7 +96,7 @@ open class LoadingView : View {
     private val centerPointPaint: Paint by lazy {
         Paint().apply {
             isAntiAlias = true
-            color = Color.WHITE
+            color = innerDotBgColor
             style = Paint.Style.FILL
         }
     }
@@ -97,30 +105,33 @@ open class LoadingView : View {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
+            context,
+            attrs,
+            defStyleAttr
     ) {
         innerInit(context, attrs, defStyleAttr, 0)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
+            context: Context,
+            attrs: AttributeSet?,
+            defStyleAttr: Int,
+            defStyleRes: Int
     ) : super(context, attrs, defStyleAttr, defStyleRes) {
         innerInit(context, attrs, defStyleAttr, defStyleRes)
     }
 
     private fun innerInit(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
+            context: Context,
+            attrs: AttributeSet?,
+            defStyleAttr: Int,
+            defStyleRes: Int
     ) {
-
+        val a = context.obtainStyledAttributes(attrs, R.styleable.LoadingView)
+        outerCircleBgColor = a.getColor(R.styleable.LoadingView_outer_circle_bg_color, Color.WHITE)
+        innerDotBgColor = a.getColor(R.styleable.LoadingView_inner_dot_bg_color, Color.WHITE)
+        a.recycle()
     }
 
     override fun onFinishInflate() {
@@ -132,10 +143,10 @@ open class LoadingView : View {
         mWidth = measuredWidth
         mHeight = measuredHeight
         outerCircleRect.set(
-            outerCircleStrokeWidth / 2f,
-            outerCircleStrokeWidth / 2f,
-            mWidth.toFloat() - outerCircleStrokeWidth / 2f,
-            mHeight.toFloat() - outerCircleStrokeWidth / 2f
+                outerCircleStrokeWidth / 2f,
+                outerCircleStrokeWidth / 2f,
+                mWidth.toFloat() - outerCircleStrokeWidth / 2f,
+                mHeight.toFloat() - outerCircleStrokeWidth / 2f
         )
         centerPoint.x = outerCircleRect.centerX()
         centerPoint.y = outerCircleRect.centerY()
@@ -156,10 +167,10 @@ open class LoadingView : View {
         canvas.drawArc(outerCircleRect, 0f, 360f, true, paint)
         //绘制一个中心圆点
         canvas.drawCircle(
-            innerCirclePoint.x,
-            innerCirclePoint.y,
-            innerCircleRadius,
-            centerPointPaint
+                innerCirclePoint.x,
+                innerCirclePoint.y,
+                innerCircleRadius,
+                centerPointPaint
         )
     }
 
@@ -217,10 +228,10 @@ open class LoadingView : View {
     private fun startTranslateAnim(): ObjectAnimator {
         //从圆心到(w/2, h)
         return ObjectAnimator.ofFloat(
-            this,
-            "spaceYOffset",
-            innerCirclePoint.y,
-            innerCirclePoint.y + validRadius
+                this,
+                "spaceYOffset",
+                innerCirclePoint.y,
+                innerCirclePoint.y + validRadius
         ).apply {
             duration = overAnimDuration
             interpolator = DecelerateInterpolator()
@@ -286,10 +297,10 @@ open class LoadingView : View {
             return
         }
         endAnimator = ObjectAnimator.ofFloat(
-            this,
-            "tempInnerRadius",
-            validRadius,
-            0f
+                this,
+                "tempInnerRadius",
+                validRadius,
+                0f
         ).apply {
             duration = overAnimDuration
             interpolator = DecelerateInterpolator()
