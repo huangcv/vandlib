@@ -39,6 +39,7 @@ object ToastUtils {
         Toast.makeText(context, messageRes, Toast.LENGTH_SHORT).show()
     }
 
+    @JvmStatic
     fun safeToast(message: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
         if (Thread.currentThread() != Looper.getMainLooper().thread) {
             //子线程
@@ -51,6 +52,7 @@ object ToastUtils {
         }
     }
 
+    @JvmStatic
     fun safeToast(@StringRes messageRes: Int, duration: Int = Toast.LENGTH_SHORT) {
         if (Thread.currentThread() != Looper.getMainLooper().thread) {
             //子线程
