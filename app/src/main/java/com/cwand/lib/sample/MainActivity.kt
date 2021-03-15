@@ -1,5 +1,6 @@
 package com.cwand.lib.sample
 
+import android.Manifest
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -9,6 +10,7 @@ import android.view.MenuItem
 import androidx.lifecycle.Observer
 import com.cwand.lib.ktx.entity.MenuEntity
 import com.cwand.lib.ktx.extensions.logD
+import com.cwand.lib.ktx.permissions.requestPermission
 import com.cwand.lib.ktx.utils.BlurUtils
 import com.cwand.lib.ktx.utils.NetworkUtils
 import com.cwand.lib.ktx.viewmodel.getViewModel
@@ -54,15 +56,25 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
     }
 
     override fun onMenuClicked(menu: MenuItem, menuId: Int, title: CharSequence) {
-        if (menuId == 1) {
-            startActivity(Intent(this, SwitchLanguageActivity::class.java))
-        }else if (menuId == 2) {
-            startActivity(Intent(this, Test3::class.java))
-        }
+//        if (menuId == 1) {
+//            startActivity(Intent(this, SwitchLanguageActivity::class.java))
+//        }else if (menuId == 2) {
+//            startActivity(Intent(this, Test3::class.java))
+//        }
+        requestPermission(this)
+            .permissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .denied {
+                toast("拒绝授权 $it")
+            }.explain {
+                toast("未授权")
+            }.granted {
+                toast("授权成功")
+            }.start()
     }
 
     override fun initListeners() {
     }
+
     override fun initData() {
         GlobalScope.launch(Dispatchers.IO) {
             NetworkUtils.networkConnected().logD()

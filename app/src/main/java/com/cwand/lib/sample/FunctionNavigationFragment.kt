@@ -26,13 +26,9 @@ class FunctionNavigationFragment : BaseFragment() {
     }
 
     override fun initViews(savedInstanceState: Bundle?, contentView: View) {
-//        widgets?.onClick {
-//            startActivity(Intent(requireContext(), WidgetsActivity::class.java))
-//        }
-
-//        capture_screen?.onClick {
-//
-//        }
+        widgets?.onClick {
+            startActivity(Intent(requireContext(), WidgetsActivity::class.java))
+        }
 
 //        open_web?.onClick {
 //            startActivity(Intent(requireContext(), WebActivity::class.java))

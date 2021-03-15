@@ -6,27 +6,9 @@
     android:orientation="vertical">
 
     <Button
-        android:visibility="gone"
         android:id="@+id/widgets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/widgets" />
-    <Button
-        android:visibility="gone"
-        android:id="@+id/capture_screen"
-        android:text="截屏"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:visibility="gone"
-        android:id="@+id/open_web"
-        android:text="打开WebView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <com.cwand.lib.ktx.web.CommonWebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 </LinearLayout>

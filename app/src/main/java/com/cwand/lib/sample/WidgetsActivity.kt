@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cwand.lib.ktx.widgets.CycleLayoutManager
+import com.cwand.lib.ktx.widgets.DividerItemDecoration
 import com.cwand.lib.ktx.widgets.RepeatLayoutManager
 import kotlinx.android.synthetic.main.activity_widgets.*
 
@@ -32,13 +35,14 @@ class WidgetsActivity : AppBaseTitleActivity() {
         recyclerView?.apply {
             myAdapter = MyAdapter()
             adapter = myAdapter
-            layoutManager = RepeatLayoutManager(RecyclerView.HORIZONTAL)
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(context))
         }
     }
 
     override fun initData() {
         for (i in 0 until 30) {
-            data.add(i.toString())
+            data.add("第 $i 个")
         }
         myAdapter?.let {
             it.setData(data)
@@ -48,7 +52,7 @@ class WidgetsActivity : AppBaseTitleActivity() {
 
     private class MyAdapter : RecyclerView.Adapter<VH>() {
         private var data: List<String>? = null
-        private var layoutInflater : LayoutInflater? = null
+        private var layoutInflater: LayoutInflater? = null
         fun setData(d: List<String>) {
             this.data = d
         }
@@ -62,6 +66,9 @@ class WidgetsActivity : AppBaseTitleActivity() {
         }
 
         override fun onBindViewHolder(holder: VH, position: Int) {
+            data?.let {
+                holder.setText(it[position])
+            }
         }
 
         override fun getItemCount(): Int {
@@ -71,7 +78,15 @@ class WidgetsActivity : AppBaseTitleActivity() {
     }
 
     private class VH(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val textView: TextView
 
+        init {
+            textView = itemView.findViewById(R.id.item_title)
+        }
+
+        fun setText(text: CharSequence) {
+            textView.text = text
+        }
     }
 
 }
