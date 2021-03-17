@@ -15,10 +15,12 @@ class ExceptionEngine private constructor() {
     companion object {
         private val instance = Holder.holder
 
+        @JvmStatic
         fun registerExceptionHandler(handler: ExceptionHandler) {
             instance.exceptionHandler = handler
         }
 
+        @JvmStatic
         @MainThread
         fun handleException(exception: Throwable): Boolean {
             return instance.exceptionHandler?.handleException(exception) ?: false

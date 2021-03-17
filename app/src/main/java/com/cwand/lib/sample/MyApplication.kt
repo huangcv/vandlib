@@ -1,11 +1,16 @@
 package com.cwand.lib.sample
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.cwand.lib.ktx.AndLib
 import com.cwand.lib.ktx.exception.AppException
 import com.cwand.lib.ktx.exception.ExceptionEngine
 import com.cwand.lib.ktx.extensions.logD
+import com.cwand.lib.ktx.widgets.*
 
 /**
  * @author : chunwei
@@ -19,6 +24,13 @@ class MyApplication : Application() {
         super.onCreate()
         AndLib.init(this)
         ExceptionEngine.registerExceptionHandler(AppExceptionHandler())
+        val config = NiceLoadingConfig
+            .obtain()
+//            .baseContentIdRes(R.id.and_lib_base_content_root)
+            .defaultState(State.ERROR)
+            .noNetworkClickIdRes(R.id.tv_no_network)
+            .viewAdapter(MyNiceLoadingAdapter())
+        NiceLoading.config(config)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -26,7 +38,7 @@ class MyApplication : Application() {
         "Application 配置变化".logD()
     }
 
-    inner class AppExceptionHandler: ExceptionEngine.ExceptionHandler{
+    inner class AppExceptionHandler : ExceptionEngine.ExceptionHandler {
         override fun handleException(exception: Throwable): Boolean {
             if (exception is AppException) {
                 "${exception.code}, ${exception.error}".logD()
@@ -35,5 +47,24 @@ class MyApplication : Application() {
             }
             return false
         }
+    }
+
+    class MyNiceLoadingAdapter : ViewAdapter {
+
+        override fun onCreateView(context: Context, state: State): View? {
+            return when (state) {
+                State.LOADING -> LayoutInflater.from(context)
+                    .inflate(R.layout.loading, null)
+                State.EMPTY -> LayoutInflater.from(context).inflate(R.layout.empty, null)
+                State.NO_NETWORK -> LayoutInflater.from(context)
+                    .inflate(R.layout.no_network, null)
+                State.ERROR -> LayoutInflater.from(context).inflate(R.layout.error, null)
+                else -> null
+            }
+        }
+
+        override fun onViewCreated(view: View?, state: State, holder: StateHolder) {
+        }
+
     }
 }

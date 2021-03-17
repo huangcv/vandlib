@@ -11,6 +11,7 @@ import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import com.cwand.lib.ktx.R
+import com.cwand.lib.ktx.extensions.logD
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -62,7 +63,7 @@ open class LoadingView : View {
 
     private val innerCirclePoint = PointF()
 
-    private var currentAnimator: ObjectAnimator? = null
+    private var circleAnimator: ObjectAnimator? = null
 
     private var endAnimator: ObjectAnimator? = null
 
@@ -105,28 +106,28 @@ open class LoadingView : View {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-            context,
-            attrs,
-            defStyleAttr
+        context,
+        attrs,
+        defStyleAttr
     ) {
         innerInit(context, attrs, defStyleAttr, 0)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(
-            context: Context,
-            attrs: AttributeSet?,
-            defStyleAttr: Int,
-            defStyleRes: Int
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
     ) : super(context, attrs, defStyleAttr, defStyleRes) {
         innerInit(context, attrs, defStyleAttr, defStyleRes)
     }
 
     private fun innerInit(
-            context: Context,
-            attrs: AttributeSet?,
-            defStyleAttr: Int,
-            defStyleRes: Int
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
     ) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LoadingView)
         outerCircleBgColor = a.getColor(R.styleable.LoadingView_outer_circle_bg_color, Color.WHITE)
@@ -143,10 +144,10 @@ open class LoadingView : View {
         mWidth = measuredWidth
         mHeight = measuredHeight
         outerCircleRect.set(
-                outerCircleStrokeWidth / 2f,
-                outerCircleStrokeWidth / 2f,
-                mWidth.toFloat() - outerCircleStrokeWidth / 2f,
-                mHeight.toFloat() - outerCircleStrokeWidth / 2f
+            outerCircleStrokeWidth / 2f,
+            outerCircleStrokeWidth / 2f,
+            mWidth.toFloat() - outerCircleStrokeWidth / 2f,
+            mHeight.toFloat() - outerCircleStrokeWidth / 2f
         )
         centerPoint.x = outerCircleRect.centerX()
         centerPoint.y = outerCircleRect.centerY()
@@ -167,10 +168,10 @@ open class LoadingView : View {
         canvas.drawArc(outerCircleRect, 0f, 360f, true, paint)
         //绘制一个中心圆点
         canvas.drawCircle(
-                innerCirclePoint.x,
-                innerCirclePoint.y,
-                innerCircleRadius,
-                centerPointPaint
+            innerCirclePoint.x,
+            innerCirclePoint.y,
+            innerCircleRadius,
+            centerPointPaint
         )
     }
 
@@ -182,8 +183,8 @@ open class LoadingView : View {
         innerCirclePoint.y = y
     }
 
-    public fun startAnim() {
-        currentAnimator = ObjectAnimator.ofFloat(this, "rotateDegree", startAngle, endAngle).apply {
+    fun startAnim() {
+        circleAnimator = ObjectAnimator.ofFloat(this, "rotateDegree", startAngle, endAngle).apply {
             duration = loadingAnimDuration
             interpolator = LinearInterpolator()
             repeatCount = ValueAnimator.INFINITE
@@ -210,14 +211,20 @@ open class LoadingView : View {
         }
         startAnimSet = AnimatorSet()
         if (showOverAnim) {
-            val startTranslateAnim = startTranslateAnim()
-            startAnimSet!!.play(startTranslateAnim).before(currentAnimator)
+            val startTranslateAnim = getStartAnimator()
+            startAnimSet!!.play(startTranslateAnim).before(circleAnimator)
 //        set.play(startTranslateAnim)
         } else {
-            startAnimSet!!.play(currentAnimator)
-            this@LoadingView.isRunning = true
+            startAnimSet!!.play(circleAnimator)
         }
         startAnimSet!!.start()
+        this@LoadingView.isRunning = true
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        resetAnim()
+        startAnim()
     }
 
     override fun onDetachedFromWindow() {
@@ -225,13 +232,13 @@ open class LoadingView : View {
         resetAnim()
     }
 
-    private fun startTranslateAnim(): ObjectAnimator {
+    private fun getStartAnimator(): ObjectAnimator {
         //从圆心到(w/2, h)
         return ObjectAnimator.ofFloat(
-                this,
-                "spaceYOffset",
-                innerCirclePoint.y,
-                innerCirclePoint.y + validRadius
+            this,
+            "spaceYOffset",
+            centerPoint.y,
+            centerPoint.y + validRadius
         ).apply {
             duration = overAnimDuration
             interpolator = DecelerateInterpolator()
@@ -275,6 +282,8 @@ open class LoadingView : View {
     public fun resetAnim() {
         endAnimator?.cancel()
         startAnimSet?.cancel()
+        spaceYOffset = 0f
+        tempInnerRadius = 0f
         endAnimator = null
         startAnimSet = null
     }
@@ -297,10 +306,10 @@ open class LoadingView : View {
             return
         }
         endAnimator = ObjectAnimator.ofFloat(
-                this,
-                "tempInnerRadius",
-                validRadius,
-                0f
+            this,
+            "tempInnerRadius",
+            validRadius,
+            0f
         ).apply {
             duration = overAnimDuration
             interpolator = DecelerateInterpolator()

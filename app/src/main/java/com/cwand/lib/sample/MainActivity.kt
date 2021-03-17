@@ -14,6 +14,8 @@ import com.cwand.lib.ktx.permissions.requestPermission
 import com.cwand.lib.ktx.utils.BlurUtils
 import com.cwand.lib.ktx.utils.NetworkUtils
 import com.cwand.lib.ktx.viewmodel.getViewModel
+import com.cwand.lib.ktx.widgets.NiceLoading
+import com.cwand.lib.ktx.widgets.StateHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppBaseVMActivity<TestViewModel>() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
@@ -66,7 +69,7 @@ class MainActivity : AppBaseVMActivity<TestViewModel>() {
             .denied {
                 toast("拒绝授权 $it")
             }.explain {
-                toast("未授权")
+                toast("未授权 $it")
             }.granted {
                 toast("授权成功")
             }.start()

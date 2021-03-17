@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.cwand.lib.ktx.extensions.onClick
 import com.cwand.lib.ktx.ui.BaseFragment
+import com.cwand.lib.ktx.widgets.NiceLoading
 import kotlinx.android.synthetic.main.fragment_fun_nav.*
 
 /**
@@ -33,6 +34,8 @@ class FunctionNavigationFragment : BaseFragment() {
 //        open_web?.onClick {
 //            startActivity(Intent(requireContext(), WebActivity::class.java))
 //        }
+//        val stateHolder = NiceLoading.bind(contentView.findViewById<View>(R.id.navigation_root)).build()
+//        stateHolder.showError()
     }
 
     override fun initListeners() {

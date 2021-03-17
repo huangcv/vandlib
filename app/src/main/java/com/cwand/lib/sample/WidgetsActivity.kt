@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cwand.lib.ktx.widgets.CycleLayoutManager
-import com.cwand.lib.ktx.widgets.DividerItemDecoration
-import com.cwand.lib.ktx.widgets.RepeatLayoutManager
+import com.cwand.lib.ktx.widgets.*
 import kotlinx.android.synthetic.main.activity_widgets.*
 
 /**
@@ -20,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_widgets.*
  */
 class WidgetsActivity : AppBaseTitleActivity() {
 
+    private lateinit var stateHolder: StateHolder
     val data = mutableListOf<String>()
     private var myAdapter: MyAdapter? = null
 
@@ -38,6 +37,17 @@ class WidgetsActivity : AppBaseTitleActivity() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context))
         }
+        stateHolder =
+            NiceLoading
+                .bind(this, R.id.fl_widget_content_root)
+                .defaultState(State.LOADING)
+                .noNetworkClick {
+                    toast("暂无网络")
+                }
+                .emptyClick(R.id.tv_empty) {
+                    toast("空数据")
+                }
+                .build()
     }
 
     override fun initData() {
@@ -48,6 +58,30 @@ class WidgetsActivity : AppBaseTitleActivity() {
             it.setData(data)
             it.notifyDataSetChanged()
         }
+    }
+
+    fun rootClick(view: View) {
+        toast("root clicked")
+    }
+
+    fun showLoading(view: View) {
+        stateHolder.showLoading()
+    }
+
+    fun showError(view: View) {
+        stateHolder.showError()
+    }
+
+    fun showEmpty(view: View) {
+        stateHolder.showEmpty()
+    }
+
+    fun showNoNetwork(view: View) {
+        stateHolder.showNoNetwork()
+    }
+
+    fun showContent(view: View) {
+        stateHolder.showContent()
     }
 
     private class MyAdapter : RecyclerView.Adapter<VH>() {
