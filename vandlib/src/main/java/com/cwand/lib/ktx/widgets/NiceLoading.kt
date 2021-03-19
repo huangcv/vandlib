@@ -1,4 +1,4 @@
-package com.cvand.niceloading
+package com.cwand.lib.ktx.widgets
 
 import android.app.Activity
 import android.content.Context
