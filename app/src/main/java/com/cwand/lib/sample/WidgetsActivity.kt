@@ -1,9 +1,12 @@
 package com.cwand.lib.sample
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.*
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,14 +43,52 @@ class WidgetsActivity : AppBaseTitleActivity() {
         stateHolder =
             NiceLoading
                 .bind(this, R.id.fl_widget_content_root)
-                .defaultState(State.LOADING)
+                .singleStateViewProvider(State.EMPTY, object : SingleStateViewProvider() {
+                    override fun provideView(context: Context): View? {
+                        return LayoutInflater.from(context)
+                            .inflate(R.layout.custom_empty, null, false)
+                    }
+
+                    override fun initView(view: View?, config: StateConfig) {
+                        view?.findViewById<ImageView>(R.id.iv_custom_empty_logo)
+                            ?.setBackgroundResource(R.drawable.ic_no_network)
+                    }
+                })
+                .defaultState(State.NO_NETWORK)
+                .contentSkipAnimation(true)
+                .viewAnimation(getViewAnimation())
+                .animationDuration(3000)
+                .animationInterpolator(BounceInterpolator())
                 .noNetworkClick {
                     toast("暂无网络")
                 }
-                .emptyClick(R.id.tv_empty) {
+                .emptyClick(R.id.tv_custom_empty) {
                     toast("空数据")
                 }
                 .build()
+    }
+
+    private fun getViewAnimation(): Animation {
+        return AnimationSet(false).apply {
+            val alpha = AlphaAnimation(0f, 1.0f)
+            alpha.duration = 1000
+            alpha.interpolator = BounceInterpolator()
+
+            val scaleAnimation = ScaleAnimation(
+                0.0f,
+                1.0f,
+                0.0f,
+                1.0f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f
+            )
+            scaleAnimation.duration = 1000
+            scaleAnimation.interpolator = BounceInterpolator()
+            addAnimation(alpha)
+            addAnimation(scaleAnimation)
+        }
     }
 
     override fun initData() {

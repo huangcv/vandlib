@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.cwand.lib.ktx.AndLib
 import com.cwand.lib.ktx.exception.AppException
 import com.cwand.lib.ktx.exception.ExceptionEngine
@@ -28,8 +27,11 @@ class MyApplication : Application() {
             .obtain()
 //            .baseContentIdRes(R.id.and_lib_base_content_root)
             .defaultState(State.ERROR)
+            .emptyDrawable(R.drawable.ic_empty)
+            .noNetworkDrawable(R.drawable.ic_no_network_def)
+            .errorDrawable(R.drawable.ic_error)
             .noNetworkClickIdRes(R.id.tv_no_network)
-            .viewAdapter(MyNiceLoadingAdapter())
+            .viewProvider(MyNiceLoadingAdapter())
         NiceLoading.config(config)
     }
 
@@ -49,9 +51,9 @@ class MyApplication : Application() {
         }
     }
 
-    class MyNiceLoadingAdapter : ViewAdapter {
+    class MyNiceLoadingAdapter : ViewProvider() {
 
-        override fun onCreateView(context: Context, state: State): View? {
+        override fun provideView(context: Context, state: State): View? {
             return when (state) {
                 State.LOADING -> LayoutInflater.from(context)
                     .inflate(R.layout.loading, null)
@@ -62,9 +64,5 @@ class MyApplication : Application() {
                 else -> null
             }
         }
-
-        override fun onViewCreated(view: View?, state: State, holder: StateHolder) {
-        }
-
     }
 }

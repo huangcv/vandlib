@@ -102,6 +102,8 @@ open class LoadingView : View {
         }
     }
 
+    private var autoPlay = true
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
@@ -113,16 +115,6 @@ open class LoadingView : View {
         innerInit(context, attrs, defStyleAttr, 0)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes) {
-        innerInit(context, attrs, defStyleAttr, defStyleRes)
-    }
-
     private fun innerInit(
         context: Context,
         attrs: AttributeSet?,
@@ -132,11 +124,8 @@ open class LoadingView : View {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LoadingView)
         outerCircleBgColor = a.getColor(R.styleable.LoadingView_outer_circle_bg_color, Color.WHITE)
         innerDotBgColor = a.getColor(R.styleable.LoadingView_inner_dot_bg_color, Color.WHITE)
+        autoPlay = a.getBoolean(R.styleable.LoadingView_auto_play, autoPlay)
         a.recycle()
-    }
-
-    override fun onFinishInflate() {
-        super.onFinishInflate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -156,10 +145,6 @@ open class LoadingView : View {
         validRadius = spaceXOffset
         innerCirclePoint.x = centerPoint.x
         innerCirclePoint.y = centerPoint.y
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -218,13 +203,15 @@ open class LoadingView : View {
             startAnimSet!!.play(circleAnimator)
         }
         startAnimSet!!.start()
-        this@LoadingView.isRunning = true
+        isRunning = true
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         resetAnim()
-        startAnim()
+        if (autoPlay) {
+            startAnim()
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -275,11 +262,11 @@ open class LoadingView : View {
     /**
      * 根据不同的半径,算出固定圆心角上的点的坐标
      */
-    public fun success() {
+    fun success() {
         startEndAnimation()
     }
 
-    public fun resetAnim() {
+    fun resetAnim() {
         endAnimator?.cancel()
         startAnimSet?.cancel()
         spaceYOffset = 0f
@@ -288,7 +275,7 @@ open class LoadingView : View {
         startAnimSet = null
     }
 
-    public fun switch() {
+    fun switch() {
         resetAnim()
         if (isRunning) {
             success()
