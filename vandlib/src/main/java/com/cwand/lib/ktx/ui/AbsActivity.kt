@@ -60,6 +60,12 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     @ColorInt
     protected var themeNavigationBarBgColor = Color.WHITE
 
+    @ColorInt
+    protected var themeTitleTextColor = Color.BLACK
+
+    @ColorInt
+    protected var themeToolbarIconColor = Color.BLACK
+
     //状态栏背景颜色,默认灰色
     @ColorInt
     var statusBarBgColor: Int = Color.WHITE
@@ -255,18 +261,36 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     @SuppressLint("ResourceType")
     private fun initThemeValue() {
         val typedValue = TypedValue()
-        themeStatusBarBgColor = if (theme.resolveAttribute(R.attr.statusBarBgColor,
+        themeStatusBarBgColor = if (theme.resolveAttribute(
+                R.attr.statusBarBgColor,
                 typedValue,
-                true)
+                true
+            )
         ) typedValue.data else Color.WHITE
-        themeToolbarBgColor = if (theme.resolveAttribute(R.attr.toolbarBgColor,
+        themeToolbarBgColor = if (theme.resolveAttribute(
+                R.attr.toolbarBgColor,
                 typedValue,
-                true)
+                true
+            )
         ) typedValue.data else Color.WHITE
-        themeNavigationBarBgColor = if (theme.resolveAttribute(R.attr.navigationBarBgColor,
+        themeNavigationBarBgColor = if (theme.resolveAttribute(
+                R.attr.navigationBarBgColor,
                 typedValue,
-                true)
+                true
+            )
         ) typedValue.data else Color.WHITE
+        themeTitleTextColor = if (theme.resolveAttribute(
+                R.attr.toolbarTitleTextColor,
+                typedValue,
+                true
+            )
+        ) typedValue.data else Color.BLACK
+        themeToolbarIconColor = if (theme.resolveAttribute(
+                R.attr.toolbarIconColor,
+                typedValue,
+                true
+            )
+        ) typedValue.data else Color.BLACK
         checkThemeColor()
     }
 

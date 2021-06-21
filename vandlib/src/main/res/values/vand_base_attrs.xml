@@ -6,6 +6,10 @@
     <attr name="toolbarBgColor" format="color|reference" />
     <!--    导航栏背景色-->
     <attr name="navigationBarBgColor" format="color|reference" />
+    <!--标题栏按钮颜色-->
+    <attr name="toolbarIconColor" format="color|reference" />
+    <!--标题栏文字颜色-->
+    <attr name="toolbarTitleTextColor" format="color|reference" />
 
     <declare-styleable name="LoadingView">
         <attr name="outer_circle_bg_color" format="color|reference" />

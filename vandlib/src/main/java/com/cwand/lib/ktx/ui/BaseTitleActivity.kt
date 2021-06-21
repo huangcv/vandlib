@@ -109,7 +109,7 @@ abstract class BaseTitleActivity : BaseActivity() {
 
     @ColorInt
     open fun defBackIconColor(): Int {
-        return ContextCompat.getColor(this, android.R.color.white)
+        return themeToolbarIconColor
     }
 
     override fun bindLayout(): Int = -1
@@ -196,6 +196,8 @@ abstract class BaseTitleActivity : BaseActivity() {
         mTitleView?.let {
             configTitle(it)
         }
+        //设置标题栏字体颜色
+        updateTitleColor(themeTitleTextColor)
         //设置标题栏
         configNativeActionBar(showBackIcon())
         //设置标题栏阴影特效
@@ -212,6 +214,13 @@ abstract class BaseTitleActivity : BaseActivity() {
     open fun configTitle(title: TextView) {
         //标题
         title.text = titleText()
+    }
+
+    /**
+     * 设置标题栏字体颜色
+     */
+    open fun updateTitleColor(@ColorInt color: Int) {
+        mTitleView?.setTextColor(themeTitleTextColor)
     }
 
     /**
@@ -236,8 +245,8 @@ abstract class BaseTitleActivity : BaseActivity() {
             val upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
                 it.setColorFilter(
-                        color,
-                        PorterDuff.Mode.SRC_ATOP
+                    color,
+                    PorterDuff.Mode.SRC_ATOP
                 )
                 toolBar.setHomeAsUpIndicator(it)
             }
@@ -278,8 +287,8 @@ abstract class BaseTitleActivity : BaseActivity() {
             val upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material)
             upArrow?.let {
                 it.setColorFilter(
-                        defBackIconColor(),
-                        PorterDuff.Mode.SRC_ATOP
+                    defBackIconColor(),
+                    PorterDuff.Mode.SRC_ATOP
                 )
                 actionBar.setHomeAsUpIndicator(it)
             }
@@ -344,7 +353,7 @@ abstract class BaseTitleActivity : BaseActivity() {
         mMenu = menu
         menuCreateState = 1
         val showMenu =
-                !fullScreen && !skipBaseToolbarLayout() && menuList.isNotEmpty() && isShowToolbar()
+            !fullScreen && !skipBaseToolbarLayout() && menuList.isNotEmpty() && isShowToolbar()
         if (showMenu) {
             menuCreateState = 2
             menuInflater.inflate(bindMenuLayout(), mMenu)
@@ -400,16 +409,18 @@ abstract class BaseTitleActivity : BaseActivity() {
                     val ss = SpannableString(iv.value.title)
                     //字体颜色
                     ss.setSpan(
-                            ForegroundColorSpan(titleC),
-                            0,
-                            iv.value.title.length,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        ForegroundColorSpan(titleC),
+                        0,
+                        iv.value.title.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                     //字体大小
-                    ss.setSpan(AbsoluteSizeSpan(titleS, true),
-                            0,
-                            iv.value.title.length,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    ss.setSpan(
+                        AbsoluteSizeSpan(titleS, true),
+                        0,
+                        iv.value.title.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     when (iv.index) {
                         1 -> {
                             val item2 = it.findItem(R.id.and_lib_base_menu_single2)
