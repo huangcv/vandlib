@@ -3,6 +3,7 @@ package com.cwand.lib.ktx.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -153,7 +154,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val lp = window.attributes
                 lp.layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                 window.attributes = lp
             }
         } else {
@@ -161,8 +162,8 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             //去除状态栏
             window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
     }
@@ -171,7 +172,7 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val lp = window.attributes
             lp.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
             window.attributes = lp
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -262,34 +263,34 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     private fun initThemeValue() {
         val typedValue = TypedValue()
         themeStatusBarBgColor = if (theme.resolveAttribute(
-                R.attr.statusBarBgColor,
-                typedValue,
-                true
-            )
+                        R.attr.statusBarBgColor,
+                        typedValue,
+                        true
+                )
         ) typedValue.data else Color.WHITE
         themeToolbarBgColor = if (theme.resolveAttribute(
-                R.attr.toolbarBgColor,
-                typedValue,
-                true
-            )
+                        R.attr.toolbarBgColor,
+                        typedValue,
+                        true
+                )
         ) typedValue.data else Color.WHITE
         themeNavigationBarBgColor = if (theme.resolveAttribute(
-                R.attr.navigationBarBgColor,
-                typedValue,
-                true
-            )
+                        R.attr.navigationBarBgColor,
+                        typedValue,
+                        true
+                )
         ) typedValue.data else Color.WHITE
         themeTitleTextColor = if (theme.resolveAttribute(
-                R.attr.toolbarTitleTextColor,
-                typedValue,
-                true
-            )
+                        R.attr.toolbarTitleTextColor,
+                        typedValue,
+                        true
+                )
         ) typedValue.data else Color.BLACK
         themeToolbarIconColor = if (theme.resolveAttribute(
-                R.attr.toolbarIconColor,
-                typedValue,
-                true
-            )
+                        R.attr.toolbarIconColor,
+                        typedValue,
+                        true
+                )
         ) typedValue.data else Color.BLACK
         checkThemeColor()
     }
@@ -458,8 +459,8 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
     open fun closeKeyboard() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(
-            window.decorView.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
+                window.decorView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
         )
     }
 
@@ -497,5 +498,14 @@ abstract class AbsActivity : AppCompatActivity(), OnEventAction {
                 e.printStackTrace()
             }
         }
+    }
+
+    /**
+     *
+     * 深色模式的值为:0x21
+     * 浅色模式的值为:0x11
+     */
+    protected fun isDarkTheme(): Boolean {
+        return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
     }
 }
