@@ -1,5 +1,6 @@
 package com.cwand.lib.ktx.extensions
 
+import android.util.Log
 import com.cwand.lib.ktx.exception.AppException
 import com.cwand.lib.ktx.exception.Error
 import com.cwand.lib.ktx.exception.ExceptionEngine
@@ -82,7 +83,8 @@ open class Launcher(
     fun start(): Job {
         return coroutineScope.safeLauncher(
             defaultLauncherCallback,
-            block)
+            block
+        )
     }
 }
 
@@ -113,25 +115,25 @@ fun CoroutineScope.safeLauncher(
     launcherCallback: LauncherCallback,
     block: suspend CoroutineScope.() -> Unit,
 ): Job {
-    return launch {
-        try {
-            kotlin.runCatching {
-                withContext(Dispatchers.Main) {
-                    launcherCallback.onStart()
-                }
-                block(this)
-            }.onSuccess {
-                launcherCallback.onSuccess()
-            }.onFailure {
-                if (!ExceptionEngine.handleException(it)) {
-                    if (it is AppException) {
-                        launcherCallback.onException(it)
-                    } else {
-                        launcherCallback.onException(AppException(Error.OTHER.code,
-                            Error.OTHER.error.plus(it.message)))
-                    }
-                }
+    val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Log.e("VandLib", throwable.message, throwable)
+        if (!ExceptionEngine.handleException(throwable)) {
+            if (throwable is AppException) {
+                launcherCallback.onException(throwable)
+            } else {
+                launcherCallback.onException(
+                    ExceptionEngine.getAppException(throwable)
+                )
             }
+        }
+    }
+
+    return launch(coroutineExceptionHandler) {
+        try {
+            withContext(Dispatchers.Main) {
+                launcherCallback.onStart()
+            }
+            block(this)
         } finally {
             launcherCallback.onCompleted()
         }

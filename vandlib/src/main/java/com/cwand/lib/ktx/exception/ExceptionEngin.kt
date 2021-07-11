@@ -1,6 +1,16 @@
 package com.cwand.lib.ktx.exception
 
 import androidx.annotation.MainThread
+import com.google.gson.JsonIOException
+import com.google.gson.JsonParseException
+import com.google.gson.JsonSyntaxException
+import org.json.JSONException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import java.net.UnknownServiceException
+import javax.net.ssl.SSLException
+import javax.net.ssl.SSLHandshakeException
+import javax.net.ssl.SSLProtocolException
 
 /**
  * @author : chunwei
@@ -24,6 +34,25 @@ class ExceptionEngine private constructor() {
         @MainThread
         fun handleException(exception: Throwable): Boolean {
             return instance.exceptionHandler?.handleException(exception) ?: false
+        }
+
+        fun getAppException(throwable: Throwable): AppException {
+            if (throwable is SocketTimeoutException) {
+                //连接超时
+                return AppException(Error.TIMEOUT_ERROR.code, Error.TIMEOUT_ERROR.error)
+            } else if (throwable is SSLProtocolException || throwable is SSLException || throwable is SSLHandshakeException) {
+                //SSL证书错误
+                return AppException(Error.SSL_ERROR.code, Error.SSL_ERROR.error)
+            } else if (throwable is JsonParseException || throwable is JsonSyntaxException || throwable is JSONException || throwable is JsonIOException) {
+                //解析异常
+                return AppException(Error.PARSE_ERROR.code, Error.PARSE_ERROR.error)
+            } else if (throwable is UnknownHostException || throwable is UnknownServiceException) {
+                //网络错误:未知主机地址等
+                return AppException(Error.NETWORK_ERROR.code, Error.NETWORK_ERROR.error)
+            } else {
+                //未知错误
+                return AppException(Error.UNKNOWN.code, Error.UNKNOWN.error)
+            }
         }
 
     }
